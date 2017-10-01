@@ -4,12 +4,10 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.xerial.snappy.Snappy;
 
-import com.google.protobuf.AbstractMessage;
-
+import pv.DotAI.DotAxtractor.Dem.CDemoPacket;
 import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
 
 public class ReplayReader {
@@ -36,12 +34,12 @@ public class ReplayReader {
 			dis.readInt();
 			//Read all atoms
 			while(dis.available() > 0) {
-				int commandID = getVarInt(dis);
+				int commandID = Decoder.getVarInt(dis);
 				System.out.println(commandID);
 				boolean compressed = (commandID & EDemoCommands.DEM_IsCompressed.getNumber()) != 0;
 				commandID &= ~EDemoCommands.DEM_IsCompressed.getNumber();
-				int tick = getVarInt(dis);
-				int size = getVarInt(dis);
+				int tick = Decoder.getVarInt(dis);
+				int size = Decoder.getVarInt(dis);
 				byte[] message = new byte[size];
 				dis.read(message);
 				if(compressed) {
@@ -49,7 +47,13 @@ public class ReplayReader {
 				}
 
 				EDemoCommands cmd = EDemoCommands.forNumber(commandID);
-				Atom a = new Atom(cmd, tick, size, commandInterpreter.getMessage(cmd, message));
+				Atom a = null;
+				if(cmd == EDemoCommands.DEM_Packet) {
+					CDemoPacket packet = (CDemoPacket) commandInterpreter.getMessage(cmd, message);
+					a = new EmbedDataAtom(cmd, tick, size, packet, commandInterpreter.extractPacketData(packet));	
+				} else {
+					a = new SingleAtom(cmd, tick, size, commandInterpreter.getMessage(cmd, message));
+				}
 				System.out.println("Read atom "+a.toString());
 			}
 		} catch (FileNotFoundException e) {
@@ -58,19 +62,5 @@ public class ReplayReader {
 			e.printStackTrace();
 		}
 	
-	}
-	
-	//Google varint decoding
-	public int getVarInt(InputStream is) throws IOException {
-		int result = 0;
-		int position = 0;
-		int i = 0;
-		do {
-			i = is.read();
-			result |= (i & 0x7F) << (position * 7); //remove msb
-			position++;
-		} while((i & 0x80) != 0);
-		return result;
-	}
-	
+	}	
 }

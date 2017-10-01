@@ -4,7 +4,7 @@ import com.google.protobuf.AbstractMessage;
 
 import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
 
-public class Atom {
+public abstract class Atom {
 
 	private EDemoCommands type;
 	private int tick;

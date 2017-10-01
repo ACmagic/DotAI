@@ -1,5 +1,7 @@
 package pv.DotAI.DotAxtractor;
 
+import java.nio.ByteBuffer;
+
 import com.google.protobuf.AbstractMessage;
 
 import pv.DotAI.DotAxtractor.Dem.CDemoClassInfo;
@@ -16,6 +18,8 @@ import pv.DotAI.DotAxtractor.Dem.CDemoStringTables;
 import pv.DotAI.DotAxtractor.Dem.CDemoSyncTick;
 import pv.DotAI.DotAxtractor.Dem.CDemoUserCmd;
 import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
+import pv.DotAI.DotAxtractor.Dem.NET_Messages;
+import pv.DotAI.DotAxtractor.Dem.SVC_Messages;
 
 public class CommandInterpreter {
 
@@ -80,5 +84,24 @@ public class CommandInterpreter {
 		}
 		return am;
 	}
+	
+	public EmbedData extractPacketData(CDemoPacket packet) throws ReplayException {
+		ByteBuffer b = packet.getData().asReadOnlyByteBuffer();
+		EmbedData ed = null;
+		while(b.hasRemaining()) {
+			int commandID = Decoder.getVarInt(b);
+			int size = Decoder.getVarInt(b);
+			
+			if(SVC_Messages.forNumber(commandID) != null) {
+				return new EmbedData(SVC_Messages.forNumber(commandID));
+			} else if(NET_Messages.forNumber(commandID) != null) {
+				return new EmbedData(NET_Messages.forNumber(commandID));
+			} else {
+				throw new ReplayException("Packet has unknown embed data");
+			}
+		}
+	}
+	
+	private void extractSVCMessageData(byte[])
 
 }
