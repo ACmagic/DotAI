@@ -15,6 +15,6 @@ public class EmbedDataAtom extends Atom {
 
 	@Override
 	public String toString() {
-		return super.toString();
+		return super.toString()+" EMBEDDED DATA: "+data.toString();
 	}
 }

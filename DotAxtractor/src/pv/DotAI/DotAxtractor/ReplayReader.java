@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.xerial.snappy.Snappy;
 
+import pv.DotAI.DotAxtractor.Dem.CDemoFullPacket;
 import pv.DotAI.DotAxtractor.Dem.CDemoPacket;
 import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
 
@@ -48,9 +49,12 @@ public class ReplayReader {
 
 				EDemoCommands cmd = EDemoCommands.forNumber(commandID);
 				Atom a = null;
-				if(cmd == EDemoCommands.DEM_Packet) {
+				if(cmd == EDemoCommands.DEM_Packet || cmd == EDemoCommands.DEM_SignonPacket) {
 					CDemoPacket packet = (CDemoPacket) commandInterpreter.getMessage(cmd, message);
 					a = new EmbedDataAtom(cmd, tick, size, packet, commandInterpreter.extractPacketData(packet));	
+				} else if(cmd == EDemoCommands.DEM_FullPacket){
+					CDemoFullPacket packet = (CDemoFullPacket) commandInterpreter.getMessage(cmd, message);
+					a = new DoubleAtom(cmd, tick, size, packet, null); //TODO extract packet data
 				} else {
 					a = new SingleAtom(cmd, tick, size, commandInterpreter.getMessage(cmd, message));
 				}

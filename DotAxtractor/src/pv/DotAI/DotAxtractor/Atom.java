@@ -2,6 +2,8 @@ package pv.DotAI.DotAxtractor;
 
 import com.google.protobuf.AbstractMessage;
 
+import pv.DotAI.DotAxtractor.Dem.CDemoFullPacket;
+import pv.DotAI.DotAxtractor.Dem.CDemoPacket;
 import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
 
 public abstract class Atom {
@@ -20,6 +22,10 @@ public abstract class Atom {
 
 	@Override
 	public String toString() {
-		return "TYPE: " + type.name() + " TICKS: " + tick + " SIZE: " + size + " MESSAGE: " + (message == null ? "null" : message.toString());
+		String base =  "TYPE: " + type.name() + " TICKS: " + tick + " SIZE: " + size + " MESSAGE: ";
+		if(!(message instanceof CDemoPacket) && !(message instanceof CDemoFullPacket)) {
+			base += message == null ? "null" : message;
+		}
+		return base;
 	}
 }
