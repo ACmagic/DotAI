@@ -620,7 +620,7 @@ enum EDemoCommands {
 	DEM_FullPacket = 13;
 	DEM_SaveGame = 14;
 	DEM_Max = 15;
-	DEM_IsCompressed = 112;
+	DEM_IsCompressed = 64;
 }
 
 message CDemoFileHeader {

@@ -30,7 +30,7 @@ public class Decoder {
 	public static int getVarInt(ByteBuffer b) {
 		int result = 0;
 		int position = 0;
-		int i = 0;
+		byte i = 0;
 		do {
 			i = b.get();
 			result |= (i & 0x7F) << (position * 7); //remove msb

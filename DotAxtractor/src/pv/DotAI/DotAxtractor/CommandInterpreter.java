@@ -1,6 +1,8 @@
 package pv.DotAI.DotAxtractor;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -111,24 +113,30 @@ public class CommandInterpreter {
 		return am;
 	}
 
-	public EmbedData extractPacketData(CDemoPacket packet) throws ReplayException {
+	public EmbedData[] extractPacketData(CDemoPacket packet) throws ReplayException {
 		ByteBuffer b = packet.getData().asReadOnlyByteBuffer();
+		List<EmbedData> datas = new ArrayList<>();
+		
 		while (b.hasRemaining()) {
 			int commandID = Decoder.getVarInt(b);
+			/*if((commandID & EDemoCommands.DEM_IsCompressed.getNumber()) != 0) {
+				commandID = commandID & ~(EDemoCommands.DEM_IsCompressed.getNumber());
+			}*/
 			int size = Decoder.getVarInt(b);
+			System.out.println("ID = "+commandID+" SIZE = "+size);
 
 			if (SVC_Messages.forNumber(commandID) != null) {
 				ProtocolMessageEnum type = SVC_Messages.forNumber(commandID);
-				new EmbedData(type, false, extractSVCMessageData(type, size, packet.getData().asReadOnlyByteBuffer()));
+				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, b)));
 			} else if (NET_Messages.forNumber(commandID) != null) {
-				new EmbedData(NET_Messages.forNumber(commandID), true, null); //Nobody cares about net messages
+				datas.add(new EmbedData(NET_Messages.forNumber(commandID), true, null)); //Nobody cares about net messages
 			} else {
 				System.out.println("Packet has unknown embed data id: "+commandID);
 				//throw new ReplayException("Packet has unknown embed data id: "+commandID);
 			}
 
 		}
-		return null;
+		return datas.toArray(new EmbedData[datas.size()]);
 	}
 
 	private AbstractMessage extractSVCMessageData(ProtocolMessageEnum type, int size, ByteBuffer buffer) {
