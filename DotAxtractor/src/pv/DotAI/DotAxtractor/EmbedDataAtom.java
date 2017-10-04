@@ -7,7 +7,7 @@ import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
 public class EmbedDataAtom extends Atom {
 
 	private EmbedData[] data;
-	
+
 	public EmbedDataAtom(EDemoCommands type, int tick, int size, AbstractMessage message, EmbedData[] data) {
 		super(type, tick, size, message);
 		this.data = data;
@@ -16,9 +16,13 @@ public class EmbedDataAtom extends Atom {
 	@Override
 	public String toString() {
 		String embedded = "";
-		for (int i = 0; i < data.length; i++) {
-			embedded += data[i].toString()+" ";
+		if (data != null) {
+			for (int i = 0; i < data.length; i++) {
+				embedded += data[i].toString() + " ";
+			}
+		} else {
+			embedded = "null";
 		}
-		return super.toString()+" EMBEDDED DATA: "+embedded;
+		return super.toString() + " EMBEDDED DATA: " + embedded;
 	}
 }

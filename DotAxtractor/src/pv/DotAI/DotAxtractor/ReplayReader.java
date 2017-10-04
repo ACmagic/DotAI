@@ -36,17 +36,17 @@ public class ReplayReader {
 			//Read all atoms
 			while(dis.available() > 0) {
 				int commandID = Decoder.getVarInt(dis);
-				//System.out.println(commandID);
-				boolean compressed = (commandID & EDemoCommands.DEM_IsCompressed.getNumber()) != 0;
+				boolean compressed = (commandID & EDemoCommands.DEM_IsCompressed.getNumber()) == EDemoCommands.DEM_IsCompressed.getNumber();
 				commandID &= ~EDemoCommands.DEM_IsCompressed.getNumber();
 				int tick = Decoder.getVarInt(dis);
 				int size = Decoder.getVarInt(dis);
 				byte[] message = new byte[size];
-				dis.read(message);
+				dis.read(message, 0, size);
 				if(compressed) {
 					message = Snappy.uncompress(message);
+					size = message.length;
 				}
-
+				
 				EDemoCommands cmd = EDemoCommands.forNumber(commandID);
 				Atom a = null;
 				
@@ -55,7 +55,7 @@ public class ReplayReader {
 					a = new EmbedDataAtom(cmd, tick, size, packet, commandInterpreter.extractPacketData(packet));	
 				} else if(cmd == EDemoCommands.DEM_FullPacket){
 					CDemoFullPacket packet = (CDemoFullPacket) commandInterpreter.getMessage(cmd, message);
-					//a = new DoubleAtom(cmd, tick, size, packet, null); //TODO extract packet data
+					a = new DoubleAtom(cmd, tick, size, packet, null); //TODO extract packet data
 				} else {
 					a = new SingleAtom(cmd, tick, size, commandInterpreter.getMessage(cmd, message));
 				}

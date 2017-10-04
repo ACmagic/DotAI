@@ -17,7 +17,7 @@ public class EmbedData {
 	
 	@Override
 	public String toString() {
-		return type.toString()+" => "+message.toString();
+		return type.toString()+" => "+(message != null ? message.toString() : "null");
 	}
 	
 	

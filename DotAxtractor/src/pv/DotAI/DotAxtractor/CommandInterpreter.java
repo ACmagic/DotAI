@@ -116,22 +116,27 @@ public class CommandInterpreter {
 	public EmbedData[] extractPacketData(CDemoPacket packet) throws ReplayException {
 		ByteBuffer b = packet.getData().asReadOnlyByteBuffer();
 		List<EmbedData> datas = new ArrayList<>();
-		
+		System.out.println(b.remaining());
+		//packets are no longer byte aligned, need to write a bitwise stream
 		while (b.hasRemaining()) {
-			int commandID = Decoder.getVarInt(b);
-			/*if((commandID & EDemoCommands.DEM_IsCompressed.getNumber()) != 0) {
-				commandID = commandID & ~(EDemoCommands.DEM_IsCompressed.getNumber());
-			}*/
-			int size = Decoder.getVarInt(b);
+			int commandID = Decoder.getVarInt(b); //commandID isn't a varint anymore it's a "bitvar"
+			int size = Decoder.getVarInt(b); //size is still a varint
 			System.out.println("ID = "+commandID+" SIZE = "+size);
-
+			
 			if (SVC_Messages.forNumber(commandID) != null) {
 				ProtocolMessageEnum type = SVC_Messages.forNumber(commandID);
 				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, b)));
 			} else if (NET_Messages.forNumber(commandID) != null) {
+				byte[] dummy = new byte[size];
+				b.get(dummy);
 				datas.add(new EmbedData(NET_Messages.forNumber(commandID), true, null)); //Nobody cares about net messages
 			} else {
 				System.out.println("Packet has unknown embed data id: "+commandID);
+				byte[] dummy = new byte[size];
+				if(b.remaining() >= size)
+					b.get(dummy);
+				else
+					break;
 				//throw new ReplayException("Packet has unknown embed data id: "+commandID);
 			}
 
@@ -219,10 +224,10 @@ public class CommandInterpreter {
 					am = CSVCMsg_UserMessage.parseFrom(data);
 					break;
 				case svc_VoiceData:
-					am = CSVCMsg_VoiceData.parseFrom(data);
+					//am = CSVCMsg_VoiceData.parseFrom(data);
 					break;
 				case svc_VoiceInit:
-					am = CSVCMsg_VoiceInit.parseFrom(data);
+					//am = CSVCMsg_VoiceInit.parseFrom(data);
 					break;
 				default:
 					break;
