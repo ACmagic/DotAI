@@ -1,6 +1,5 @@
 package pv.DotAI.DotAxtractor;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +42,6 @@ import pv.DotAI.DotAxtractor.Dem.CSVCMsg_SplitScreen;
 import pv.DotAI.DotAxtractor.Dem.CSVCMsg_TempEntities;
 import pv.DotAI.DotAxtractor.Dem.CSVCMsg_UpdateStringTable;
 import pv.DotAI.DotAxtractor.Dem.CSVCMsg_UserMessage;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_VoiceData;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_VoiceInit;
 import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
 import pv.DotAI.DotAxtractor.Dem.NET_Messages;
 import pv.DotAI.DotAxtractor.Dem.SVC_Messages;
@@ -113,42 +110,36 @@ public class CommandInterpreter {
 		return am;
 	}
 
-	public EmbedData[] extractPacketData(CDemoPacket packet) throws ReplayException {
-		ByteBuffer b = packet.getData().asReadOnlyByteBuffer();
+	public EmbedData[] extractPacketData(CDemoPacket packet) {
 		List<EmbedData> datas = new ArrayList<>();
-		System.out.println(b.remaining());
-		//packets are no longer byte aligned, need to write a bitwise stream
-		while (b.hasRemaining()) {
-			int commandID = Decoder.getVarInt(b); //commandID isn't a varint anymore it's a "bitvar"
-			int size = Decoder.getVarInt(b); //size is still a varint
-			System.out.println("ID = "+commandID+" SIZE = "+size);
+		BitStream bs = new BitStream(packet.getData().asReadOnlyByteBuffer());
+		while (bs.remaining() >= 8) {
+			int commandID = Decoder.getBitVar(bs);
+			System.out.println("CID: "+commandID);
+			int size = Decoder.getVarInt(bs);
+			System.out.println("SIZE: "+size);
 			
 			if (SVC_Messages.forNumber(commandID) != null) {
 				ProtocolMessageEnum type = SVC_Messages.forNumber(commandID);
-				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, b)));
+				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, bs)));
 			} else if (NET_Messages.forNumber(commandID) != null) {
 				byte[] dummy = new byte[size];
-				b.get(dummy);
+				bs.get(dummy);
 				datas.add(new EmbedData(NET_Messages.forNumber(commandID), true, null)); //Nobody cares about net messages
 			} else {
 				System.out.println("Packet has unknown embed data id: "+commandID);
-				byte[] dummy = new byte[size];
-				if(b.remaining() >= size)
-					b.get(dummy);
-				else
-					break;
-				//throw new ReplayException("Packet has unknown embed data id: "+commandID);
 			}
-
+			System.out.println("more");
 		}
+		System.out.println("Packet end");
 		return datas.toArray(new EmbedData[datas.size()]);
 	}
 
-	private AbstractMessage extractSVCMessageData(ProtocolMessageEnum type, int size, ByteBuffer buffer) {
+	private AbstractMessage extractSVCMessageData(ProtocolMessageEnum type, int size, BitStream bs) {
 		SVC_Messages msg = (SVC_Messages) type;
 		AbstractMessage am = null;
 		byte[] data = new byte[size];
-		buffer.get(data);
+		bs.get(data);
 		try {
 			switch (msg) {
 				case svc_BSPDecal:
