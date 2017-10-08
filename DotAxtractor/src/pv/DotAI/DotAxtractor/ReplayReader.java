@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import org.xerial.snappy.Snappy;
 
-import pv.DotAI.DotAxtractor.Dem.CDemoFullPacket;
-import pv.DotAI.DotAxtractor.Dem.CDemoPacket;
-import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoFullPacket;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoPacket;
+import pv.DotAI.DotAxtractor.protobuf.Demo.EDemoCommands;
 
 public class ReplayReader {
 

@@ -6,3 +6,5 @@
 */.settings
 *.jar
 *.jnilib
+*/protobuf/*.java
+DotAxtractor/src/pv/DotAI/DotAxtractor/protobuf/*.java

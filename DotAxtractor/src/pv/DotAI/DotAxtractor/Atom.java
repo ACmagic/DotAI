@@ -2,9 +2,9 @@ package pv.DotAI.DotAxtractor;
 
 import com.google.protobuf.AbstractMessage;
 
-import pv.DotAI.DotAxtractor.Dem.CDemoFullPacket;
-import pv.DotAI.DotAxtractor.Dem.CDemoPacket;
-import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoFullPacket;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoPacket;
+import pv.DotAI.DotAxtractor.protobuf.Demo.EDemoCommands;
 
 public abstract class Atom {
 

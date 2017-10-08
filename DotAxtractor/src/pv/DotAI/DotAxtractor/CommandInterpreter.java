@@ -7,44 +7,44 @@ import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.ProtocolMessageEnum;
 
-import pv.DotAI.DotAxtractor.Dem.CDemoClassInfo;
-import pv.DotAI.DotAxtractor.Dem.CDemoConsoleCmd;
-import pv.DotAI.DotAxtractor.Dem.CDemoCustomData;
-import pv.DotAI.DotAxtractor.Dem.CDemoCustomDataCallbacks;
-import pv.DotAI.DotAxtractor.Dem.CDemoFileHeader;
-import pv.DotAI.DotAxtractor.Dem.CDemoFileInfo;
-import pv.DotAI.DotAxtractor.Dem.CDemoFullPacket;
-import pv.DotAI.DotAxtractor.Dem.CDemoPacket;
-import pv.DotAI.DotAxtractor.Dem.CDemoSendTables;
-import pv.DotAI.DotAxtractor.Dem.CDemoStringTables;
-import pv.DotAI.DotAxtractor.Dem.CDemoSyncTick;
-import pv.DotAI.DotAxtractor.Dem.CDemoUserCmd;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_BSPDecal;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_ClassInfo;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_CreateStringTable;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_CrosshairAngle;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_FixAngle;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_FullFrameSplit;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_GameEvent;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_GameEventList;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_GetCvarValue;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_Menu;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_PacketEntities;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_PacketReliable;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_Prefetch;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_Print;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_SendTable;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_ServerInfo;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_SetPause;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_SetView;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_Sounds;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_SplitScreen;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_TempEntities;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_UpdateStringTable;
-import pv.DotAI.DotAxtractor.Dem.CSVCMsg_UserMessage;
-import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
-import pv.DotAI.DotAxtractor.Dem.NET_Messages;
-import pv.DotAI.DotAxtractor.Dem.SVC_Messages;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoClassInfo;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoConsoleCmd;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoCustomData;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoCustomDataCallbacks;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoFileHeader;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoFileInfo;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoFullPacket;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoPacket;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoSendTables;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoStringTables;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoSyncTick;
+import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoUserCmd;
+import pv.DotAI.DotAxtractor.protobuf.Demo.EDemoCommands;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_BSPDecal;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_ClassInfo;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_CreateStringTable;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_CrosshairAngle;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_FixAngle;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_FullFrameSplit;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_GameEventList;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_GetCvarValue;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Menu;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_PacketEntities;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_PacketReliable;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Prefetch;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Print;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SendTable;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_ServerInfo;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SetPause;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SetView;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Sounds;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SplitScreen;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_TempEntities;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.SVC_Messages;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CSVCMsg_GameEvent;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CSVCMsg_UserMessage;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.NET_Messages;
 
 public class CommandInterpreter {
 
@@ -149,24 +149,6 @@ public class CommandInterpreter {
 				case svc_CreateStringTable:
 					am = CSVCMsg_CreateStringTable.parseFrom(data);
 					break;
-				case svc_CrosshairAngle:
-					am = CSVCMsg_CrosshairAngle.parseFrom(data);
-					break;
-				case svc_EntityMessage:
-					//TODO Find what's that
-					break;
-				case svc_FixAngle:
-					am = CSVCMsg_FixAngle.parseFrom(data);
-					break;
-				case svc_FullFrameSplit:
-					am = CSVCMsg_FullFrameSplit.parseFrom(data);
-					break;
-				case svc_GameEvent:
-					am = CSVCMsg_GameEvent.parseFrom(data);
-					break;
-				case svc_GameEventList:
-					am = CSVCMsg_GameEventList.parseFrom(data);
-					break;
 				case svc_GetCvarValue:
 					am = CSVCMsg_GetCvarValue.parseFrom(data);
 					break;
@@ -185,9 +167,6 @@ public class CommandInterpreter {
 				case svc_Print:
 					am = CSVCMsg_Print.parseFrom(data);
 					break;
-				case svc_SendTable:
-					am = CSVCMsg_SendTable.parseFrom(data);
-					break;
 				case svc_ServerInfo:
 					am = CSVCMsg_ServerInfo.parseFrom(data);
 					break;
@@ -203,14 +182,8 @@ public class CommandInterpreter {
 				case svc_SplitScreen:
 					am = CSVCMsg_SplitScreen.parseFrom(data);
 					break;
-				case svc_TempEntities:
-					am = CSVCMsg_TempEntities.parseFrom(data);
-					break;
 				case svc_UpdateStringTable:
 					am = CSVCMsg_UpdateStringTable.parseFrom(data);
-					break;
-				case svc_UserMessage:
-					am = CSVCMsg_UserMessage.parseFrom(data);
 					break;
 				case svc_VoiceData:
 					//am = CSVCMsg_VoiceData.parseFrom(data);

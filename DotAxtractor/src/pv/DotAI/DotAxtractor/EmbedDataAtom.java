@@ -2,7 +2,7 @@ package pv.DotAI.DotAxtractor;
 
 import com.google.protobuf.AbstractMessage;
 
-import pv.DotAI.DotAxtractor.Dem.EDemoCommands;
+import pv.DotAI.DotAxtractor.protobuf.Demo.EDemoCommands;
 
 public class EmbedDataAtom extends Atom {
 
