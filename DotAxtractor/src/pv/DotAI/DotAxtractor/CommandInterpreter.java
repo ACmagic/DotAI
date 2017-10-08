@@ -114,11 +114,9 @@ public class CommandInterpreter {
 		List<EmbedData> datas = new ArrayList<>();
 		BitStream bs = new BitStream(packet.getData().asReadOnlyByteBuffer());
 		while (bs.remaining() >= 8) {
+ 			
 			int commandID = Decoder.getBitVar(bs);
-			System.out.println("CID: "+commandID);
-			int size = Decoder.getVarInt(bs);
-			System.out.println("SIZE: "+size);
-			
+			int size = Decoder.getVarInt(bs);			
 			if (SVC_Messages.forNumber(commandID) != null) {
 				ProtocolMessageEnum type = SVC_Messages.forNumber(commandID);
 				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, bs)));
@@ -127,11 +125,11 @@ public class CommandInterpreter {
 				bs.get(dummy);
 				datas.add(new EmbedData(NET_Messages.forNumber(commandID), true, null)); //Nobody cares about net messages
 			} else {
+				byte[] dummy = new byte[size];
+				bs.get(dummy);
 				System.out.println("Packet has unknown embed data id: "+commandID);
-			}
-			System.out.println("more");
+			}			
 		}
-		System.out.println("Packet end");
 		return datas.toArray(new EmbedData[datas.size()]);
 	}
 

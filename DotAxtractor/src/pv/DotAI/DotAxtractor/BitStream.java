@@ -11,7 +11,7 @@ public class BitStream {
 	public BitStream(ByteBuffer b) {
 		this.buffer = b;
 		this.position = 0;
-		this.bitposition = 7;
+		this.bitposition = 0;
 	}
 	
 	public int nextBit() {
@@ -19,9 +19,9 @@ public class BitStream {
 			throw new IndexOutOfBoundsException("Buffer ended");
 		}
 		int bit = ((buffer.get(position)) & (1 << (bitposition))) >> bitposition;
-		bitposition--;
-		if(bitposition == -1) {
-			bitposition = 7;
+		bitposition++;
+		if(bitposition == 8) {
+			bitposition = 0;
 			position++;
 		}
 		return bit;
@@ -32,9 +32,17 @@ public class BitStream {
 			throw new IllegalArgumentException("Cannot read more than 32 bits at a time !");
 		}
 		int result = 0;
+		int tmp = 0;
 		for (int i = 0; i < n; i++) {
 			int t = nextBit();
-			result |= t << (i);
+			tmp |= t << (i);
+			if(i != 0 && i % 8 == 0) {
+				result += (tmp << (i * 8));
+				tmp = 0;
+			}
+		}
+		if(n <= 8) {
+			return tmp;
 		}
 		return result;
 	}
@@ -50,7 +58,7 @@ public class BitStream {
 	}
 	
 	public int remaining() {
-		return (buffer.capacity() - position) * 8 - (7 - bitposition);
+		return (buffer.capacity() - position) * 8 - bitposition;
 	}
 
 }

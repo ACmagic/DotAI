@@ -15,6 +15,6 @@ public class DoubleAtom extends Atom {
 	
 	@Override
 	public String toString() {
-		return super.toString()+" EMBEDDED ATOM: "+embed != null ? embed.toString() : "null";
+		return super.toString()+" EMBEDDED ATOM: "+(embed != null ? embed.toString() : "null");
 	}
 }
