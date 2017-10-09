@@ -22,28 +22,29 @@ import pv.DotAI.DotAxtractor.protobuf.Demo.CDemoUserCmd;
 import pv.DotAI.DotAxtractor.protobuf.Demo.EDemoCommands;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_BSPDecal;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_ClassInfo;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_ClearAllStringTables;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_CmdKeyValues;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_CreateStringTable;
-import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_CrosshairAngle;
-import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_FixAngle;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_FullFrameSplit;
-import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_GameEventList;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_GetCvarValue;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_HLTVStatus;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Menu;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_PacketEntities;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_PacketReliable;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_PeerList;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Prefetch;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Print;
-import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SendTable;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_ServerInfo;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SetPause;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SetView;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_Sounds;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_SplitScreen;
-import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_TempEntities;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_StopSound;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_VoiceData;
+import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_VoiceInit;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.SVC_Messages;
-import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CSVCMsg_GameEvent;
-import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CSVCMsg_UserMessage;
 import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.NET_Messages;
 
 public class CommandInterpreter {
@@ -186,11 +187,30 @@ public class CommandInterpreter {
 					am = CSVCMsg_UpdateStringTable.parseFrom(data);
 					break;
 				case svc_VoiceData:
-					//am = CSVCMsg_VoiceData.parseFrom(data);
+					am = CSVCMsg_VoiceData.parseFrom(data);
 					break;
 				case svc_VoiceInit:
-					//am = CSVCMsg_VoiceInit.parseFrom(data);
+					am = CSVCMsg_VoiceInit.parseFrom(data);
 					break;
+				case svc_CmdKeyValues:
+					am = CSVCMsg_CmdKeyValues.parseFrom(data);
+					break;
+				case svc_ClearAllStringTables:
+					am = CSVCMsg_ClearAllStringTables.parseFrom(data);
+					break;
+				case svc_FlattenedSerializer:
+					am = CSVCMsg_FlattenedSerializer.parseFrom(data);
+					break;
+				case svc_FullFrameSplit:
+					am = CSVCMsg_FullFrameSplit.parseFrom(data);
+					break;
+				case svc_HLTVStatus:
+					am = CSVCMsg_HLTVStatus.parseFrom(data);
+					break;
+				case svc_PeerList:
+					am = CSVCMsg_PeerList.parseFrom(data);
+				case svc_StopSound:
+					am = CSVCMsg_StopSound.parseFrom(data);
 				default:
 					break;
 			}
