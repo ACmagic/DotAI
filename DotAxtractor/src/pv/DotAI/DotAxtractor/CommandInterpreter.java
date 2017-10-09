@@ -45,6 +45,18 @@ import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_VoiceData;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.CSVCMsg_VoiceInit;
 import pv.DotAI.DotAxtractor.protobuf.Netmessages.SVC_Messages;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_Disconnect;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_NOP;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SetConVar;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SignonState;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SpawnGroup_Load;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SpawnGroup_LoadCompleted;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SpawnGroup_ManifestUpdate;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SpawnGroup_SetCreationTick;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SpawnGroup_Unload;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_SplitScreenUser;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_StringCmd;
+import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.CNETMsg_Tick;
 import pv.DotAI.DotAxtractor.protobuf.Networkbasetypes.NET_Messages;
 
 public class CommandInterpreter {
@@ -115,9 +127,9 @@ public class CommandInterpreter {
 		List<EmbedData> datas = new ArrayList<>();
 		BitStream bs = new BitStream(packet.getData().asReadOnlyByteBuffer());
 		while (bs.remaining() >= 8) {
- 			
+
 			int commandID = Decoder.getBitVar(bs);
-			int size = Decoder.getVarInt(bs);			
+			int size = Decoder.getVarInt(bs);
 			if (SVC_Messages.forNumber(commandID) != null) {
 				ProtocolMessageEnum type = SVC_Messages.forNumber(commandID);
 				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, bs)));
@@ -128,10 +140,62 @@ public class CommandInterpreter {
 			} else {
 				byte[] dummy = new byte[size];
 				bs.get(dummy);
-				System.out.println("Packet has unknown embed data id: "+commandID);
-			}			
+				System.out.println("Packet has unknown embed data id: " + commandID);
+			}
 		}
 		return datas.toArray(new EmbedData[datas.size()]);
+	}
+
+	private AbstractMessage extractNETMessageData(ProtocolMessageEnum type, int size, BitStream bs) {
+		NET_Messages msg = (NET_Messages) type;
+		AbstractMessage am = null;
+		byte[] data = new byte[size];
+		bs.get(data);
+		try {
+			switch (msg) {
+				case net_Disconnect:
+					am = CNETMsg_Disconnect.parseFrom(data);
+					break;
+				case net_NOP:
+					am = CNETMsg_NOP.parseFrom(data);
+					break;
+				case net_SetConVar:
+					am = CNETMsg_SetConVar.parseFrom(data);
+					break;
+				case net_SignonState:
+					am = CNETMsg_SignonState.parseFrom(data);
+					break;
+				case net_SpawnGroup_Load:
+					am = CNETMsg_SpawnGroup_Load.parseFrom(data);
+					break;
+				case net_SpawnGroup_LoadCompleted:
+					am = CNETMsg_SpawnGroup_LoadCompleted.parseFrom(data);
+					break;
+				case net_SpawnGroup_ManifestUpdate:
+					am = CNETMsg_SpawnGroup_ManifestUpdate.parseFrom(data);
+					break;
+				case net_SpawnGroup_SetCreationTick:
+					am = CNETMsg_SpawnGroup_SetCreationTick.parseFrom(data);
+					break;
+				case net_SpawnGroup_Unload:
+					am = CNETMsg_SpawnGroup_Unload.parseFrom(data);
+					break;
+				case net_SplitScreenUser:
+					am = CNETMsg_SplitScreenUser.parseFrom(data);
+					break;
+				case net_StringCmd:
+					am = CNETMsg_StringCmd.parseFrom(data);
+					break;
+				case net_Tick:
+					am = CNETMsg_Tick.parseFrom(data);
+					break;
+				default:
+					break;
+			}
+		} catch (InvalidProtocolBufferException e) {
+			e.printStackTrace();
+		}
+		return am;
 	}
 
 	private AbstractMessage extractSVCMessageData(ProtocolMessageEnum type, int size, BitStream bs) {
