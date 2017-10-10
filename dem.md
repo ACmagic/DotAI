@@ -62,7 +62,7 @@ enum EDemoCommands {
 ```
 ## Embedded Data
 
-Now that you have a serie of protobuf messages, you need to decode what's inside **DEM_Packet, DEM_SignonPacket **and **DEM_FullPacket**.
+Now that you have a serie of protobuf messages, you need to decode what's inside **DEM_Packet, DEM_SignonPacket** and **DEM_FullPacket**.
 
 DEM_Packet and DEM_SignonPacket are basically the same, signon packets are just sent prior to the game start.
 
