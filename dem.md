@@ -6,7 +6,7 @@ This document will try to explain as well as possible the format and the data in
 
 ### The Header
 
-Demo file header starts with *"PBDEMS2\0"* for Valve's Source 2 Engine files and *"PBUFDEM\0"* for Valve's Source 1 Engine files. This project only focuses on **Source 2** files so from now on all the infomations given only apply to these files.
+Demo file header starts with *"PBDEMS2*\\*0"* for Valve's Source 2 Engine files and *"PBUFDEM*\\*0"* for Valve's Source 1 Engine files. This project only focuses on **Source 2** files so from now on all the infomations given only apply to these files.
 
 The header then contains two 4-bytes integers, still haven't found what they are used for but they probably specify a byte offset to some information in the file.
 
