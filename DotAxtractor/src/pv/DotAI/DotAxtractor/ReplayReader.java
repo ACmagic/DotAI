@@ -55,7 +55,7 @@ public class ReplayReader {
 					a = new EmbedDataAtom(cmd, tick, size, packet, commandInterpreter.extractPacketData(packet));	
 				} else if(cmd == EDemoCommands.DEM_FullPacket){
 					CDemoFullPacket packet = (CDemoFullPacket) commandInterpreter.getMessage(cmd, message);
-					a = new DoubleAtom(cmd, tick, size, packet, null); //TODO extract packet data
+					a = new DoubleAtom(cmd, tick, size, packet, new EmbedDataAtom(EDemoCommands.DEM_Packet, tick, packet.getPacket().getData().size(), packet.getPacket(), commandInterpreter.extractPacketData(packet.getPacket())));
 				} else {
 					a = new SingleAtom(cmd, tick, size, commandInterpreter.getMessage(cmd, message));
 				}
