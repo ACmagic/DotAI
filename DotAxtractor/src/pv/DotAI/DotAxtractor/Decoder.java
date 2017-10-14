@@ -41,11 +41,11 @@ public class Decoder {
 	public static int getBitVar(BitStream bs) {
 		int base = bs.readBits(6);
 		if((base & 0x30) == 0x30) {
-			base = (base & 0x15) | (bs.readBits(28) << 4);
+			base = (base & 15) | (bs.readBits(28) << 4);
 		} else if((base & 0x30) == 0x20) {
-			base = (base & 0x15) | (bs.readBits(8) << 4); 
+			base = (base & 15) | (bs.readBits(8) << 4); 
 		} else if((base & 0x30) == 0x10) {
-			base = (base & 0x15) | (bs.readBits(4) << 4); 
+			base = (base & 15) | (bs.readBits(4) << 4); 
 		}
 		return base;
 	}

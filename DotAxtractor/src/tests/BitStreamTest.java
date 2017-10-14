@@ -49,6 +49,11 @@ public class BitStreamTest {
 		for (int i = 0; i < data.length; i++) {
 			assertEquals(data[i], bs.readBits(8));
 		}
+		bs = new BitStream(ByteBuffer.wrap(data));
+		assertEquals(0, bs.readBits(4));
+		assertEquals(0xA, bs.readBits(4));
+		assertEquals(0, bs.readBits(6));
+		//assertEquals(0xF, bs.readBits(10));
 	}
 	
 	@Test
@@ -57,9 +62,9 @@ public class BitStreamTest {
 				(byte) 0x80, (byte) 0xFF
 		};
 		BitStream bs = new BitStream(ByteBuffer.wrap(data));
-		assertEquals(bs.nextBit(), 1);
-		assertEquals(bs.nextBit(), 0);
-		assertEquals(bs.readBits(7), 1);
+		assertEquals(1, bs.nextBit());
+		assertEquals(0, bs.nextBit());
+		assertEquals(1, bs.readBits(7));
 	}
 
 }

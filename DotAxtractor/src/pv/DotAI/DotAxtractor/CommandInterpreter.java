@@ -134,9 +134,7 @@ public class CommandInterpreter {
 				ProtocolMessageEnum type = SVC_Messages.forNumber(commandID);
 				datas.add(new EmbedData(type, false, extractSVCMessageData(type, size, bs)));
 			} else if (NET_Messages.forNumber(commandID) != null) {
-				byte[] dummy = new byte[size];
-				bs.get(dummy);
-				datas.add(new EmbedData(NET_Messages.forNumber(commandID), true, null)); //Nobody cares about net messages
+				datas.add(new EmbedData(NET_Messages.forNumber(commandID), true, extractNETMessageData(NET_Messages.forNumber(commandID), size, bs)));
 			} else {
 				byte[] dummy = new byte[size];
 				bs.get(dummy);
@@ -206,7 +204,7 @@ public class CommandInterpreter {
 		try {
 			switch (msg) {
 				case svc_BSPDecal:
-					am = CSVCMsg_BSPDecal.parseFrom(data);
+					//am = CSVCMsg_BSPDecal.parseFrom(data);
 					break;
 				case svc_ClassInfo:
 					am = CSVCMsg_ClassInfo.parseFrom(data);
@@ -275,8 +273,6 @@ public class CommandInterpreter {
 					am = CSVCMsg_PeerList.parseFrom(data);
 				case svc_StopSound:
 					am = CSVCMsg_StopSound.parseFrom(data);
-				default:
-					break;
 			}
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
