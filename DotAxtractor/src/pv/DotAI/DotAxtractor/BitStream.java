@@ -37,7 +37,7 @@ public class BitStream {
 			int t = nextBit();
 			tmp |= t << (i);
 			if(i != 0 && i % 8 == 0) {
-				result += (tmp << (i * 8));
+				result += (tmp << ((n-1-i) * 8));
 				tmp = 0;
 			}
 		}

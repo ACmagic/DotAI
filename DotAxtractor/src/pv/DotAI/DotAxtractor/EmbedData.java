@@ -19,6 +19,28 @@ public class EmbedData {
 	public String toString() {
 		return type.toString()+" => "+(message != null ? message.toString() : "null");
 	}
-	
-	
+
+	public boolean isNetMessage() {
+		return netMessage;
+	}
+
+	public ProtocolMessageEnum getType() {
+		return type;
+	}
+
+	public void setType(ProtocolMessageEnum type) {
+		this.type = type;
+	}
+
+	public AbstractMessage getMessage() {
+		return message;
+	}
+
+	public void setMessage(AbstractMessage message) {
+		this.message = message;
+	}
+
+	public void setNetMessage(boolean netMessage) {
+		this.netMessage = netMessage;
+	}	
 }

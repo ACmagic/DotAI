@@ -17,4 +17,13 @@ public class DoubleAtom extends Atom {
 	public String toString() {
 		return super.toString()+" EMBEDDED ATOM: "+(embed != null ? embed.toString() : "null");
 	}
+
+	public Atom getEmbed() {
+		return embed;
+	}
+
+	@Override
+	public void parseAtom(ReplayBuilder b) {
+		this.embed.parseAtom(b);
+	}
 }

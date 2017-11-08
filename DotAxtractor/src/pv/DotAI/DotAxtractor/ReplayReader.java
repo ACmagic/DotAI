@@ -16,9 +16,11 @@ public class ReplayReader {
 	public FileInputStream file;
 	private final String EXPECTED_HEADER = "PBDEMS2\0";
 	private CommandInterpreter commandInterpreter;
+	private ReplayBuilder replayBuilder;
 	
 	public ReplayReader() {
-		commandInterpreter = new CommandInterpreter();
+		this.commandInterpreter = new CommandInterpreter();
+		this.replayBuilder = new ReplayBuilder();
 	}
 
 	public void readFile(String path) throws ReplayException {
@@ -52,14 +54,14 @@ public class ReplayReader {
 				
 				if(cmd == EDemoCommands.DEM_Packet || cmd == EDemoCommands.DEM_SignonPacket) {
 					CDemoPacket packet = (CDemoPacket) commandInterpreter.getMessage(cmd, message);
-					a = new EmbedDataAtom(cmd, tick, size, packet, commandInterpreter.extractPacketData(packet));	
+					a = new EmbeddedDataAtom(cmd, tick, size, packet, commandInterpreter.extractPacketData(packet));	
 				} else if(cmd == EDemoCommands.DEM_FullPacket){
 					CDemoFullPacket packet = (CDemoFullPacket) commandInterpreter.getMessage(cmd, message);
-					a = new DoubleAtom(cmd, tick, size, packet, new EmbedDataAtom(EDemoCommands.DEM_Packet, tick, packet.getPacket().getData().size(), packet.getPacket(), commandInterpreter.extractPacketData(packet.getPacket())));
+					a = new DoubleAtom(cmd, tick, size, packet, new EmbeddedDataAtom(EDemoCommands.DEM_Packet, tick, packet.getPacket().getData().size(), packet.getPacket(), commandInterpreter.extractPacketData(packet.getPacket())));
 				} else {
 					a = new SingleAtom(cmd, tick, size, commandInterpreter.getMessage(cmd, message));
 				}
-				System.out.println("Read atom "+a.toString());
+				this.replayBuilder.parseAtom(a);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

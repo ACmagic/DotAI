@@ -28,4 +28,22 @@ public abstract class Atom {
 		}
 		return base;
 	}
+
+	public abstract void parseAtom(ReplayBuilder b);
+	
+	public EDemoCommands getType() {
+		return type;
+	}
+
+	public int getTick() {
+		return tick;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public AbstractMessage getMessage() {
+		return message;
+	}
 }

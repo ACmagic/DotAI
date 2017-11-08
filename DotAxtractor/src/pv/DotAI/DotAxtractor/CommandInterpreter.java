@@ -138,7 +138,6 @@ public class CommandInterpreter {
 			} else {
 				byte[] dummy = new byte[size];
 				bs.get(dummy);
-				System.out.println("Packet has unknown embed data id: " + commandID);
 			}
 		}
 		return datas.toArray(new EmbedData[datas.size()]);
@@ -204,7 +203,7 @@ public class CommandInterpreter {
 		try {
 			switch (msg) {
 				case svc_BSPDecal:
-					//am = CSVCMsg_BSPDecal.parseFrom(data);
+					am = CSVCMsg_BSPDecal.parseFrom(data);
 					break;
 				case svc_ClassInfo:
 					am = CSVCMsg_ClassInfo.parseFrom(data);
