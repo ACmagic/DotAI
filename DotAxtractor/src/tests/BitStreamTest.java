@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
-import pv.DotAI.DotAxtractor.BitStream;
+import pv.dotai.datai.util.BitStream;
 
 public class BitStreamTest {
 
