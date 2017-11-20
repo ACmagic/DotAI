@@ -11,6 +11,7 @@ import org.xerial.snappy.Snappy;
 import pv.dotai.datai.message.FileHeaderHandler;
 import pv.dotai.datai.message.MessageRouter;
 import pv.dotai.datai.message.PacketHandler;
+import pv.dotai.datai.message.SVCPacketEntitiesHandler;
 import pv.dotai.datai.message.StopHandler;
 import pv.dotai.datai.protobuf.Demo.CDemoClassInfo;
 import pv.dotai.datai.protobuf.Demo.CDemoConsoleCmd;
@@ -26,21 +27,21 @@ import pv.dotai.datai.protobuf.Demo.CDemoStringTables;
 import pv.dotai.datai.protobuf.Demo.CDemoSyncTick;
 import pv.dotai.datai.protobuf.Demo.CDemoUserCmd;
 import pv.dotai.datai.protobuf.Demo.EDemoCommands;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_PacketEntities;
 
 public class ReplayReader {
 
 	public FileInputStream file;
 	private final String EXPECTED_HEADER = "PBDEMS2\0";
-	private ReplayBuilder replayBuilder;
 	private MessageRouter router;
 	
 	public ReplayReader() {
-		this.replayBuilder = new ReplayBuilder();
 		this.router = new MessageRouter();
 		
 		this.router.registerHandler(CDemoFileHeader.class, new FileHeaderHandler());
-		this.router.registerHandler(CDemoPacket.class, new PacketHandler());
+		this.router.registerHandler(CDemoPacket.class, new PacketHandler(this.router));
 		this.router.registerHandler(CDemoStop.class, new StopHandler());
+		this.router.registerHandler(CSVCMsg_PacketEntities.class, new SVCPacketEntitiesHandler());
 
 	}
 	
