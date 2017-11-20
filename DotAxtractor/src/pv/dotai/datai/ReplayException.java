@@ -1,4 +1,4 @@
-package __pv.DotAI.DotAxtractor;
+package pv.dotai.datai;
 
 public class ReplayException extends Exception {
 

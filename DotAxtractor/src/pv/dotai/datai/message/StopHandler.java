@@ -6,7 +6,7 @@ public class StopHandler implements MessageHandler<CDemoStop> {
 
 	@Override
 	public void handle(CDemoStop message) {
-		
+		System.out.println("Replay Stop");
 	}
 
 }

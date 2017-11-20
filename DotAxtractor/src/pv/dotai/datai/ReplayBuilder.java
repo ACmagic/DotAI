@@ -1,14 +1,10 @@
-package __pv.DotAI.DotAxtractor;
+package pv.dotai.datai;
 
-import __pv.DotAI.DotAxtractor.protobuf.Demo.CDemoFileHeader;
+import pv.dotai.datai.protobuf.Demo.CDemoFileHeader;
 
 public class ReplayBuilder {
 
 	private CDemoFileHeader header;
-	
-	public void parseAtom(Atom a) {
-		a.parseAtom(this);
-	}
 
 	public CDemoFileHeader getHeader() {
 		return header;

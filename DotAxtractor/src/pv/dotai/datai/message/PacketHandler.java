@@ -6,7 +6,7 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 
 	@Override
 	public void handle(CDemoPacket message) {
-		
+		System.out.println("Packet");
 	}
 
 }

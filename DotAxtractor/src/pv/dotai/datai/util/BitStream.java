@@ -57,6 +57,30 @@ public class BitStream {
 		}
 	}
 	
+	public int getBitVar() {
+		int base = this.readBits(6);
+		if((base & 0x30) == 0x30) {
+			base = (base & 0xF) | (this.readBits(28) << 4);
+		} else if((base & 0x30) == 0x20) {
+			base = (base & 0xF) | (this.readBits(8) << 4); 
+		} else if((base & 0x30) == 0x10) {
+			base = (base & 0xF) | (this.readBits(4) << 4); 
+		}
+		return base;
+	}
+	
+	public int getVarInt() {
+		int result = 0;
+		int position = 0;
+		int i = 0;
+		do {
+			i = this.readBits(8);
+			result |= (i & 0x7F) << (position * 7); //remove msb
+			position++;
+		} while((i & 0x80) != 0); //while the msb != 0
+		return result;
+	}
+	
 	public int remaining() {
 		return (buffer.capacity() - position) * 8 - bitposition;
 	}
