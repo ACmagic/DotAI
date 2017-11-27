@@ -13,7 +13,7 @@ public class MessageRouter {
     		}
     }
 
-    public void registerHandler(Class<?> eventClass, MessageHandler handler) {
+    public<T> void registerHandler(Class<T> eventClass, MessageHandler<T> handler) {
         routes.put(eventClass, handler);
     }
 	

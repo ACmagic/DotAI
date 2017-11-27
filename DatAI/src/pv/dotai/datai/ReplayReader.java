@@ -8,11 +8,18 @@ import java.io.InputStream;
 
 import org.xerial.snappy.Snappy;
 
+import pv.dotai.datai.message.ClassInfoHandler;
+import pv.dotai.datai.message.CreateStringTableHandler;
 import pv.dotai.datai.message.FileHeaderHandler;
+import pv.dotai.datai.message.FlattenedSerializersHandler;
+import pv.dotai.datai.message.FullPacketHandler;
 import pv.dotai.datai.message.MessageRouter;
 import pv.dotai.datai.message.PacketHandler;
 import pv.dotai.datai.message.SVCPacketEntitiesHandler;
+import pv.dotai.datai.message.SendTableHandler;
+import pv.dotai.datai.message.ServerInfoHandler;
 import pv.dotai.datai.message.StopHandler;
+import pv.dotai.datai.message.UpdateStringTableHandler;
 import pv.dotai.datai.protobuf.Demo.CDemoClassInfo;
 import pv.dotai.datai.protobuf.Demo.CDemoConsoleCmd;
 import pv.dotai.datai.protobuf.Demo.CDemoCustomData;
@@ -27,7 +34,11 @@ import pv.dotai.datai.protobuf.Demo.CDemoStringTables;
 import pv.dotai.datai.protobuf.Demo.CDemoSyncTick;
 import pv.dotai.datai.protobuf.Demo.CDemoUserCmd;
 import pv.dotai.datai.protobuf.Demo.EDemoCommands;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_CreateStringTable;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_PacketEntities;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_ServerInfo;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
 
 public class ReplayReader {
 
@@ -42,7 +53,13 @@ public class ReplayReader {
 		this.router.registerHandler(CDemoPacket.class, new PacketHandler(this.router));
 		this.router.registerHandler(CDemoStop.class, new StopHandler());
 		this.router.registerHandler(CSVCMsg_PacketEntities.class, new SVCPacketEntitiesHandler());
-
+		this.router.registerHandler(CDemoClassInfo.class, new ClassInfoHandler());
+		this.router.registerHandler(CSVCMsg_FlattenedSerializer.class, new FlattenedSerializersHandler());
+		this.router.registerHandler(CDemoSendTables.class, new SendTableHandler(this.router));
+		this.router.registerHandler(CSVCMsg_ServerInfo.class, new ServerInfoHandler());
+		this.router.registerHandler(CDemoFullPacket.class, new FullPacketHandler(this.router));
+		this.router.registerHandler(CSVCMsg_CreateStringTable.class, new CreateStringTableHandler());
+		this.router.registerHandler(CSVCMsg_UpdateStringTable.class, new UpdateStringTableHandler());
 	}
 	
 	public void readFile(String path) throws ReplayException {

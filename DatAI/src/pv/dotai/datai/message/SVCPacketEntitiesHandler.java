@@ -1,5 +1,6 @@
 package pv.dotai.datai.message;
 
+import pv.dotai.datai.ReplayBuilder;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_PacketEntities;
 import pv.dotai.datai.util.BitStream;
 
@@ -21,7 +22,7 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 			if(a == 1 && b == 1) {
 				type = updateType.DELETE;
 			} else if(a == 1 && b == 0) {
-				type = updateType.MYSTERY;
+				type = updateType.LEAVE;
 			} else if(a == 0 && b == 1) {
 				type = updateType.CREATE;
 			} else {
@@ -30,11 +31,12 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 			
 			switch(type) {
 				case CREATE:
+					int classID = bs.readBits(ReplayBuilder.getInstance().CLASSID_SIZE);
 					
 					break;
 				case DELETE:
 					break;
-				case MYSTERY:
+				case LEAVE:
 					break;
 				case UPDATE:
 					break;
@@ -43,7 +45,7 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 	}
 	
 	enum updateType {
-		CREATE, UPDATE, DELETE, MYSTERY
+		CREATE, UPDATE, DELETE, LEAVE
 	}
 
 }

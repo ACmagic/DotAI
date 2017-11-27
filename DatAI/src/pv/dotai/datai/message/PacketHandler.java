@@ -3,7 +3,10 @@ package pv.dotai.datai.message;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import pv.dotai.datai.protobuf.Demo.CDemoPacket;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_CreateStringTable;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_PacketEntities;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_ServerInfo;
+import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
 import pv.dotai.datai.protobuf.Netmessages.SVC_Messages;
 import pv.dotai.datai.protobuf.Networkbasetypes.NET_Messages;
 import pv.dotai.datai.util.BitStream;
@@ -44,6 +47,7 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 				case svc_CmdKeyValues:
 					break;
 				case svc_CreateStringTable:
+					this.router.sendMessage(CSVCMsg_CreateStringTable.parseFrom(data));
 					break;
 				case svc_FlattenedSerializer:
 					break;
@@ -67,6 +71,7 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 				case svc_Print:
 					break;
 				case svc_ServerInfo:
+					this.router.sendMessage(CSVCMsg_ServerInfo.parseFrom(data));
 					break;
 				case svc_SetPause:
 					break;
@@ -79,6 +84,7 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 				case svc_StopSound:
 					break;
 				case svc_UpdateStringTable:
+					this.router.sendMessage(CSVCMsg_UpdateStringTable.parseFrom(data));
 					break;
 				case svc_VoiceData:
 					break;
