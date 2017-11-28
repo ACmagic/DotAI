@@ -47,6 +47,19 @@ public class BitStream {
 		return result;
 	}
 	
+	public byte[] readBitsAsBytes(int nbits) {
+		byte[] bytes = new byte[(int) Math.round(Math.ceil(nbits / 8.0))];
+		int writeIdx = 0;
+		for(; nbits >= 8; nbits -= 8) {
+			bytes[writeIdx] = (byte) this.readBits(8);
+			writeIdx++;
+		}
+		if(nbits > 0) {
+			bytes[writeIdx] = (byte) this.readBits(nbits);
+		}
+		return bytes;
+	}
+	
 	public void get(byte[] buffer) {
 		for (int i = 0; i < buffer.length; i++) {
 			if(remaining() > 8) {
@@ -55,6 +68,16 @@ public class BitStream {
 				buffer[i] = (byte) readBits(remaining());
 			}
 		}
+	}
+	
+	public String readString() {
+		StringBuilder sb = new StringBuilder();
+		int b = this.readBits(8);
+		while(b != 0) {
+			sb.append((char)b);
+			b = this.readBits(8);
+		}
+		return sb.toString();
 	}
 	
 	public int getBitVar() {

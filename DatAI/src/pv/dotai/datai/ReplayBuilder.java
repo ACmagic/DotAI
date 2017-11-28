@@ -3,6 +3,7 @@ package pv.dotai.datai;
 import java.util.HashMap;
 import java.util.Map;
 
+import pv.dotai.datai.message.datast.StringTables;
 import pv.dotai.datai.replay.Entity;
 
 public class ReplayBuilder {
@@ -11,10 +12,12 @@ public class ReplayBuilder {
 	private final Map<Integer, Entity> entities;
 	private final Map<Integer, String> classInfo;
 	private boolean classInfoComplete = false;
+	private final StringTables stringTables;
 	
 	public ReplayBuilder() {
 		entities = new HashMap<>();
 		this.classInfo = new HashMap<>();
+		this.stringTables = new StringTables();
 	}
 	
 	public void updateInstanceBaseline() {
@@ -38,5 +41,9 @@ public class ReplayBuilder {
 
 	public void setClassInfoComplete(boolean classInfoComplete) {
 		this.classInfoComplete = classInfoComplete;
+	}
+
+	public StringTables getStringTables() {
+		return stringTables;
 	}
 }
