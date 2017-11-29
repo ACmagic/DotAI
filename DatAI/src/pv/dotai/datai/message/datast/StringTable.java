@@ -35,7 +35,6 @@ public class StringTable {
 			return items;
 		}
 		BitStream bs = new BitStream(rodata);
-
 		for (int i = 0; i < nUpdates; i++) {
 			String key = "";
 			byte[] value = null;
@@ -53,7 +52,7 @@ public class StringTable {
 				if(bs.readBits(1) == 1) {
 					int pos = bs.readBits(5);
 					int size = bs.readBits(5);
-					
+										
 					if(pos >= keys.size()) {
 						key += bs.readString();
 					} else {
@@ -87,7 +86,6 @@ public class StringTable {
 					bs.get(value);
 				}
 			}
-			//System.out.println(key);
 			items.add(new StringTableItem(idx, key, value));
 		}
 		return items;

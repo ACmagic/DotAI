@@ -15,6 +15,14 @@ public class StringTables {
 		this.nextIndex = 0;
 	}
 
+	public StringTable getByName(String name) {
+		Integer idx = this.nameIndex.get(name);
+		if(idx != null) {
+			return this.tables.get(idx);
+		}
+		return null;
+	}
+	
 	public int getNextIndex() {
 		return nextIndex;
 	}

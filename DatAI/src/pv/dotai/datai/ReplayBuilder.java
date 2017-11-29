@@ -3,6 +3,8 @@ package pv.dotai.datai;
 import java.util.HashMap;
 import java.util.Map;
 
+import pv.dotai.datai.message.datast.StringTable;
+import pv.dotai.datai.message.datast.StringTableItem;
 import pv.dotai.datai.message.datast.StringTables;
 import pv.dotai.datai.replay.Entity;
 
@@ -22,7 +24,19 @@ public class ReplayBuilder {
 	
 	public void updateInstanceBaseline() {
 		if(!classInfoComplete) return;
+		StringTable st = this.getStringTables().getByName("instancebaseline");
+		if(st == null) {
+			System.out.println("Skipping updateInstanceBaseline: no instancebaseline stringtable");
+			return;
+		}
 		
+		for (StringTableItem item : st.getItems().values()) {
+			updateInstanceBaseline(item);
+		}
+	}
+	
+	private void updateInstanceBaseline(StringTableItem item) {
+		//TODO
 	}
 	
 	private static ReplayBuilder instance;

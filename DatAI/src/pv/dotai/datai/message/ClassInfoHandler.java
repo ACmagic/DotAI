@@ -13,6 +13,7 @@ public class ClassInfoHandler implements MessageHandler<CDemoClassInfo> {
 		}
 		ReplayBuilder.getInstance().setClassInfoComplete(true);
 		ReplayBuilder.getInstance().updateInstanceBaseline();
+		
 	}
 
 }
