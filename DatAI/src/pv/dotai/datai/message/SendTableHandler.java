@@ -1,12 +1,10 @@
 package pv.dotai.datai.message;
 
-import java.io.IOException;
-
-import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import pv.dotai.datai.protobuf.Demo.CDemoSendTables;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
+import pv.dotai.datai.util.BitStream;
 
 public class SendTableHandler implements MessageHandler<CDemoSendTables>{
 
@@ -18,13 +16,13 @@ public class SendTableHandler implements MessageHandler<CDemoSendTables>{
 	
 	@Override
 	public void handle(CDemoSendTables m) {
-		CodedInputStream cis = CodedInputStream.newInstance(m.getData().asReadOnlyByteBuffer());
+		BitStream bs = new BitStream(m.getData().asReadOnlyByteBuffer());
+		int size = bs.getVarInt();
+		byte[] bserializer = new byte[size];
+		bs.get(bserializer);
 		try {
-			CSVCMsg_FlattenedSerializer protoMessage = CSVCMsg_FlattenedSerializer.parseFrom(cis.readRawBytes(cis.readRawVarint32()));
-			router.sendMessage(protoMessage);
+			router.sendMessage(CSVCMsg_FlattenedSerializer.parseFrom(bserializer));
 		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -10,6 +10,7 @@ import pv.dotai.datai.replay.Entity;
 
 public class ReplayBuilder {
 	public int CLASSID_SIZE;
+	public int GAME_BUILD;
 	
 	private final Map<Integer, Entity> entities;
 	private final Map<Integer, String> classInfo;
@@ -36,7 +37,13 @@ public class ReplayBuilder {
 	}
 	
 	private void updateInstanceBaseline(StringTableItem item) {
-		//TODO
+		try {
+			int classID = Integer.parseInt(item.getKey());
+		} catch(NumberFormatException e) {
+			System.err.println("Invalid InstanceBaseline key: "+item.getKey());
+			return;
+		}
+		
 	}
 	
 	private static ReplayBuilder instance;
