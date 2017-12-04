@@ -17,7 +17,7 @@ public class SendTableHandler implements MessageHandler<CDemoSendTables>{
 	@Override
 	public void handle(CDemoSendTables m) {
 		BitStream bs = new BitStream(m.getData().asReadOnlyByteBuffer());
-		int size = bs.getVarInt();
+		int size = bs.readVarUInt32();
 		byte[] bserializer = new byte[size];
 		bs.get(bserializer);
 		try {

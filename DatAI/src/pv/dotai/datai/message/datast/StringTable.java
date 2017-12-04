@@ -43,7 +43,7 @@ public class StringTable {
 			if(bs.readBits(1) == 1) {
 				idx++;
 			} else {
-				idx = bs.getVarInt() + 1;
+				idx = bs.readVarUInt32() + 1;
 			}
 			
 			//if it has a key

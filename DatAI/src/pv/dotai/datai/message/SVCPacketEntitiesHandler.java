@@ -11,7 +11,7 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 		BitStream bs = new BitStream(m.getEntityData().asReadOnlyByteBuffer());
 		int idx = -1;
 		for (int i = 0; i < m.getUpdatedEntries(); i++) {
-			int delta = bs.getBitVar();
+			int delta = bs.readBitVar();
 			idx += delta + 1;
 			
 			int a = bs.readBits(1);

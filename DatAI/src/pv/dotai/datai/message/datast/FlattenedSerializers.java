@@ -29,7 +29,7 @@ public class FlattenedSerializers {
 			ProtoFlattenedSerializerField_t field = props.get(i);
 			DataTableProperty prop = new DataTableProperty();
 			prop.setField(new DataTableField(this.proto.getSymbols(field.getVarNameSym()), this.proto.getSymbols(field.getVarTypeSym()), -1, field.getEncodeFlags(), field.getBitCount(), field.getLowValue(), field.getHighValue(), field.getFieldSerializerVersion(), null, build));
-			this.propertySerializerTable.
+			this.propertySerializerTable.FillSerializer(prop.getField());
 		}
 		return table;
 	}

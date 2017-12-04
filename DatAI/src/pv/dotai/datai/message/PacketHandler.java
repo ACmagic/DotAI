@@ -23,8 +23,8 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 	public void handle(CDemoPacket p) {
 		BitStream bs = new BitStream(p.getData().asReadOnlyByteBuffer());
 		while (bs.remaining() >= 8) {
-			int cmd = bs.getBitVar();
-			int size = bs.getVarInt();
+			int cmd = bs.readBitVar();
+			int size = bs.readVarUInt32();
 			byte[] data = new byte[size];
 			bs.get(data);
 			if (SVC_Messages.forNumber(cmd) != null) {
