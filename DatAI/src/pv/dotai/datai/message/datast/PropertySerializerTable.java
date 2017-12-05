@@ -11,7 +11,7 @@ import pv.dotai.datai.message.datast.decoder.Decoders;
 public class PropertySerializerTable {
 
 	private Map<String, PropertySerializer> propertySerializers;
-	//private static Pattern arrPat = Pattern.compile("([^[\\]]+)\\[(\\d+)]");
+	private static Pattern arrPat = Pattern.compile("([^\\[\\]]+)\\[(\\d+)\\]");
 	private static Pattern vecPat = Pattern.compile("CUtlVector\\<\\s(.*)\\s>$");
 
 	public PropertySerializerTable() {
@@ -45,7 +45,7 @@ public class PropertySerializerTable {
 			return this.propertySerializers.get(name);
 		}
 
-		DecodeFunc decoder, decoderContainer;
+		DecodeFunc decoder = null, decoderContainer = null;
 		switch (name) {
 			case "float32":
 				decoder = Decoders::decodeFloat;
@@ -112,7 +112,72 @@ public class PropertySerializerTable {
 				break;
 		}
 		
-		//TODO
-		return null;
+		if(name.endsWith("*")) {
+			decoder = Decoders::decodeBoolean;
+		}
+		
+		Matcher m = arrPat.matcher(name);
+		if(m.find()) {
+			String typeName = m.group(1);
+			int size = Integer.parseInt(m.group(2));
+			
+			PropertySerializer serializer = this.propertySerializers.get(typeName);
+			if(this.propertySerializers.get(typeName) == null) {
+				serializer = getPropertySerializerByName(typeName);
+				this.propertySerializers.put(typeName, serializer);
+			}
+			
+			PropertySerializer ps = new PropertySerializer(serializer.getDecode(), decoderContainer, true, size, serializer, typeName);
+			this.propertySerializers.put(name, ps);
+			return ps;
+		}
+		
+		m = vecPat.matcher(name);
+		if(m.find()) {
+			PropertySerializer ps = new PropertySerializer(decoder, decoderContainer, true, 1024, null, name);
+			this.propertySerializers.put(name, ps);
+			return ps;
+		}
+		
+		if(name.equals("C_DOTA_ItemStockInfo[MAX_ITEM_STOCKS]")) {
+			String typeName = "C_DOTA_ItemStockInfo";
+			PropertySerializer serializer = this.propertySerializers.get(typeName);
+			if(serializer == null) {
+				serializer = getPropertySerializerByName(typeName);
+				this.propertySerializers.put(typeName, serializer);
+			}
+			
+			PropertySerializer ps = new PropertySerializer(serializer.getDecode(), decoderContainer, true, 8, serializer, typeName);
+			this.propertySerializers.put(name, ps);
+			return ps;
+		}
+		
+		if(name.equals("CDOTA_AbilityDraftAbilityState[MAX_ABILITY_DRAFT_ABILITIES]")) {
+			String typeName = "CDOTA_AbilityDraftAbilityState";
+			
+			PropertySerializer serializer = this.propertySerializers.get(typeName);
+			if(serializer == null) {
+				serializer = getPropertySerializerByName(typeName);
+				this.propertySerializers.put(typeName, serializer);
+			}
+			
+			PropertySerializer ps = new PropertySerializer(serializer.getDecode(), decoderContainer, true, 48, serializer, typeName);
+			this.propertySerializers.put(name, ps);
+			return ps;
+		}
+		
+		if(name.equals("m_SpeechBubbles")) {
+			PropertySerializer ps = new PropertySerializer(decoder, decoderContainer, true, 5, null, name);
+			this.propertySerializers.put(name, ps);
+			return ps;
+		}
+		
+		if(name.equals("DOTA_PlayerChallengeInfo") || name.equals("DOTA_CombatLogQueryProgress")) {
+			PropertySerializer ps = new PropertySerializer(decoder, decoderContainer, true, 1024, null, name);
+			this.propertySerializers.put(name, ps);
+			return ps;
+		}
+		
+		return new PropertySerializer(decoder, decoderContainer, false, 0, null, name);
 	}
 }
