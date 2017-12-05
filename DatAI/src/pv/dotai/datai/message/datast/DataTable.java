@@ -15,6 +15,13 @@ public class DataTable {
 		this.properties = new ArrayList<>();
 	}
 	
+	public DataTable(DataTable dataTable) {
+		this.name = dataTable.name;
+		this.version = dataTable.version;
+		this.flags = dataTable.flags;
+		this.properties = new ArrayList<>(dataTable.properties);
+	}
+
 	public String getName() {
 		return name;
 	}

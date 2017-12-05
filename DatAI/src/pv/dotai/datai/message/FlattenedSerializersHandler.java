@@ -3,7 +3,6 @@ package pv.dotai.datai.message;
 import java.util.HashMap;
 
 import pv.dotai.datai.ReplayBuilder;
-import pv.dotai.datai.message.datast.DataTable;
 import pv.dotai.datai.message.datast.FlattenedSerializers;
 import pv.dotai.datai.message.datast.PropertySerializerTable;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
@@ -24,5 +23,7 @@ public class FlattenedSerializersHandler implements MessageHandler<CSVCMsg_Flatt
 			}
 			fs.getSerializers().get(name).put(ver, fs.recurseTable(s));
 		}
+		
+		ReplayBuilder.getInstance().setSerializers(fs.getSerializers());
 	}
 }

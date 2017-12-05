@@ -3,6 +3,11 @@ package pv.dotai.datai.message.datast;
 public class DataTableProperty {
 	private DataTableField field;
 	private DataTable dataTable;
+		
+	public DataTableProperty(DataTableField field, DataTable dataTable) {
+		this.field = field;
+		this.dataTable = dataTable;
+	}
 	
 	public DataTableField getField() {
 		return field;

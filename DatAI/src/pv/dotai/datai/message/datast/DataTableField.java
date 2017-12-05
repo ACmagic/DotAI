@@ -12,12 +12,11 @@ public class DataTableField {
 	private float highValue;
 	
 	private int version;
-	//TODO property serializer
-	private Object serializer;
+	private PropertySerializer serializer;
 	
 	private int build;
 
-	public DataTableField(String name, String type, int index, int flags, int bitCount, float lowValue, float highValue, int version, Object serializer, int build) {
+	public DataTableField(String name, String type, int index, int flags, int bitCount, float lowValue, float highValue, int version, PropertySerializer serializer, int build) {
 		this.name = name;
 		this.type = type;
 		this.index = index;
@@ -102,11 +101,11 @@ public class DataTableField {
 		this.version = version;
 	}
 
-	public Object getSerializer() {
+	public PropertySerializer getSerializer() {
 		return serializer;
 	}
 
-	public void setSerializer(Object serializer) {
+	public void setSerializer(PropertySerializer serializer) {
 		this.serializer = serializer;
 	}
 
