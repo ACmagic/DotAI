@@ -2,7 +2,7 @@
 
 This document will try to explain as well as possible the format and the data in the DotA 2 *.dem* files.
 
-## Basics
+## Format
 
 ### The Header
 
@@ -60,7 +60,7 @@ enum EDemoCommands {
   DEM_IsCompressed = 64;
 }
 ```
-## Embedded Data
+### Embedded Data
 
 Now that you have a serie of protobuf messages, you need to decode what's inside **DEM_Packet, DEM_SignonPacket** and **DEM_FullPacket**.
 
@@ -102,4 +102,24 @@ DEM_FullPacket contains a DEM_Packet which itself contains embedded data as desc
 
 
 
-DEM_SendTables are also encoded with embedded data but I haven't tried to read it yet.
+## Data
+
+Directly after the magic (in our case *"PBDEMS2*\\*0"* + 2 * 4 bytes integer) the first entry found is a **DEM_FileHeader** this one contains metadata about the replay but we don't really need it.
+
+After that we find a bunch of **DEM_SignonPacket**, one of which contains a **svc_ServerInfo** in it's embedded data. This packet is usefull to determine which build of DotA2 the replay was made with, we need to store this info for later. The build is found in the svc_ServerInfo's **game_dir** field, the field will look like this: *"/opt/srcds/dota/dota_v**<VERSION>**/dota"*. The <VERSION> part is the game build.
+
+Next up is a set of string tables creation (**svc_CreateStringTable** as packet embedded data)
+
+### String Tables
+
+String tables are a set of (Index : Integer, Key : String, Value : byte array) entries although the Key or the Value might be empty
+
+Here's an example of a little part of the table called `EntityNames` 
+
+| Index | Key                                     | Value |
+| ----- | --------------------------------------- | ----- |
+| 24    | dark_troll_warlord_ensnare              | null  |
+| 25    | dark_troll_warlord_raise_dead           | null  |
+| 26    | polar_furbolg_ursa_warrior_thunder_clap | null  |
+
+(The real table has index from 0 to 250)

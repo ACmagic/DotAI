@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
-
 import org.xerial.snappy.Snappy;
 
 import pv.dotai.datai.ReplayBuilder;
@@ -47,7 +45,7 @@ public class CreateStringTableHandler implements MessageHandler<CSVCMsg_CreateSt
 		ReplayBuilder.getInstance().getStringTables().getTables().put(t.getIndex(), t);
 		ReplayBuilder.getInstance().getStringTables().getNameIndex().put(t.getName(), t.getIndex());
 		
-		if(t.getName() == "instancebaseline") {
+		if(t.getName().equals("instancebaseline")) {
 			ReplayBuilder.getInstance().updateInstanceBaseline();
 		}
 	}
