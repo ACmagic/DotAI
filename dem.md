@@ -112,9 +112,9 @@ Next up is a set of string tables creation (**svc_CreateStringTable** as packet 
 
 ### String Tables
 
-String tables are a set of (Index : Integer, Key : String, Value : byte array) entries although the Key or the Value might be empty
+String tables are a set of items(Index : Integer, Key : String, Value : byte array) although the Key or the Value might be empty
 
-Here's an example of a little part of the table called `EntityNames` 
+Here's an example of a little part of the table called *"EntityNames"* (The real table has indices from 0 to 250)
 
 | Index | Key                                     | Value |
 | ----- | --------------------------------------- | ----- |
@@ -122,4 +122,41 @@ Here's an example of a little part of the table called `EntityNames`
 | 25    | dark_troll_warlord_raise_dead           | null  |
 | 26    | polar_furbolg_ursa_warrior_thunder_clap | null  |
 
-(The real table has index from 0 to 250)
+The string table is `StringData` field contains every items to parse, but it is sometimes compressed, the field `DataCompressed` indicates if so. The latest replays all use Snappy compression but older ones may use LZSS compression, to determine if it is the case, check if the 4 first bytes of the data are string litteral *"LZSS"*.
+
+Reading the StringData requires you to have a key history buffer of size 32, then for each entry (0 -> `NumEntries`) you need to read the following:
+
+- 1 bit => increment index or absolute index (if absolute then read a varint to find the index)
+- 1 bit => the item has a key ?
+- if the item has a key
+  - 1 bit => uses history ?
+  - if the key uses history
+    - 5 bits => position
+    - 5 bits => size
+    - if the position isn't in our history
+      - the key is a null terminated string
+    - if the position is in our history
+      - concat the history key(0..size) with a null terminated string
+  - if the item doesn't use history
+    - the key is a null terminated string
+- 1 bit => the item has a value ?
+- if the item has a value
+  - if the table's `UserDataFixedSize` field is true
+    - the value is a byte array of `UserDataSize` **bits**
+  - else
+    - 14 bits => size
+    - 3 bits => ???
+    - the value is a byte array of *size* **bytes**
+
+
+
+Last thing is to update instance baseline if the name of the table is equal to "instancebaseline"
+
+
+
+### Send Tables
+
+CEntityIdentity
+CPhysicsComponent
+CRenderComponent
+CAdditionalWearable
