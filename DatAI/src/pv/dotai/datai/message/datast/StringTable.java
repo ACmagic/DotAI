@@ -49,10 +49,10 @@ public class StringTable {
 			//if it has a key
 			if(bs.readBits(1) == 1) {
 				//if use history
-				if(bs.readBits(1) == 1) {
+				if(bs.readBits(1) == 1) {	
 					int pos = bs.readBits(5);
 					int size = bs.readBits(5);
-										
+					
 					if(pos >= keys.size()) {
 						key += bs.readString();
 					} else {

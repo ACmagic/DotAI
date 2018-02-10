@@ -127,6 +127,14 @@ public class BitStream {
 		return b.getLong();
 	}
 	
+	public int readFieldPathBitVar() {
+		if (nextBit() == 1) return readBits(2);
+        if (nextBit() == 1) return readBits(4);
+        if (nextBit() == 1) return readBits(10);
+        if (nextBit() == 1) return readBits(17);
+        return readBits(31);
+	}
+	
 	public float[] read3fNormal() {
 		float[] vec = new float[3];
 		
@@ -171,6 +179,11 @@ public class BitStream {
 	
 	public float readFloat() {
 		return Float.intBitsToFloat(this.readLittleEndian32());
+	}
+	
+	public int readVarSInt() {
+		 int v = readVarUInt32();
+		 return (v >>> 1) ^ -(1 & v);
 	}
 	
 	public float readCoord() {
