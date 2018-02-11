@@ -120,7 +120,7 @@ public class BitStream {
 	}
 
 	public long readLittleEndian64() {
-		byte[] rawdata = new byte[4];
+		byte[] rawdata = new byte[8];
 		this.get(rawdata);
 		ByteBuffer b = ByteBuffer.wrap(rawdata);
 		b.order(ByteOrder.LITTLE_ENDIAN);

@@ -68,7 +68,7 @@ public class ReplayBuilder {
 		
 		if(item.getValue() != null && item.getValue().length > 0) {
 			BitStream bs = new BitStream(ByteBuffer.wrap(item.getValue()));
-			this.classBaseline.get(classID).readProperties();
+			this.classBaseline.get(classID).readProperties(bs, serializer.get(0));
 		}
 	}
 	

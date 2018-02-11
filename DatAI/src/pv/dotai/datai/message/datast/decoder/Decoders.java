@@ -11,7 +11,7 @@ public class Decoders {
 	}
 	
 	public static float decodeFloat(BitStream bs, DataTableField dtf) {
-		if(dtf.getEncoder().equals("coord")) {
+		if(dtf.getEncoder() != null && dtf.getEncoder().equals("coord")) {
 			return bs.readCoord();
 		}
 		
@@ -35,7 +35,7 @@ public class Decoders {
 	}
 	
 	public static long decodeUnsigned(BitStream bs, DataTableField dtf) {
-		if(dtf.getEncoder().equals("fixed64")) {
+		if(dtf.getEncoder() != null && dtf.getEncoder().equals("fixed64")) {
 			return bs.readLittleEndian64();
 		}
 		return bs.readVarUInt64();
@@ -50,7 +50,7 @@ public class Decoders {
 	}
 	
 	public static float[] decodeFVector(BitStream bs, DataTableField dtf) {
-		if(dtf.getEncoder().equals("normal")) {
+		if(dtf.getEncoder() != null && dtf.getEncoder().equals("normal")) {
 			return bs.read3fNormal();
 		}
 		return new float[] {decodeFloat(bs, dtf), decodeFloat(bs, dtf), decodeFloat(bs, dtf)};
@@ -66,7 +66,7 @@ public class Decoders {
 	
 	public static float[] decodeQAngle(BitStream bs, DataTableField dtf) {
 		float[] q = new float[3];
-		if(dtf.getEncoder().equals("qangle_pitch_yaw")) {
+		if(dtf.getEncoder() != null && dtf.getEncoder().equals("qangle_pitch_yaw")) {
 			q[0] = bs.readAngle(dtf.getBitCount());
 			q[1] = bs.readAngle(dtf.getBitCount());
 			return q;

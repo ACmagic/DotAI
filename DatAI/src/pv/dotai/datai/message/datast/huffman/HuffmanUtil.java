@@ -3,9 +3,19 @@ package pv.dotai.datai.message.datast.huffman;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import pv.dotai.datai.message.datast.FieldPathOP;
+
 public class HuffmanUtil {
 
 	private HuffmanUtil() {}
+	
+	public static HuffmanTree buildFieldPathHuffman() {
+		int[] huffmanlist = new int[FieldPathOP.values().length];
+		for (int i = 0; i < FieldPathOP.values().length; i++) {
+			huffmanlist[i] = FieldPathOP.values()[i].getWeight();
+		}
+		return buildHuffmanTree(huffmanlist);
+	}
 	
 	public static HuffmanTree buildHuffmanTree(int[] symFreq) {
 		//A priority queue is a binary heap

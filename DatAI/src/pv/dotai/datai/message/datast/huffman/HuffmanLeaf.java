@@ -35,10 +35,4 @@ public class HuffmanLeaf implements HuffmanTree {
 	public HuffmanTree right() {
 		throw new RuntimeException("Leaf doesn't have a right");
 	}
-
-	@Override
-	public int compareTo(HuffmanTree o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }
