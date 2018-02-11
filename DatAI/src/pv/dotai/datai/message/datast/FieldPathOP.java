@@ -319,6 +319,7 @@ public enum FieldPathOP {
 	FieldPathEncodeFinish(25474) {
 		@Override
 		public void execute(FieldPath fp, BitStream bs) {
+			fp.setFinished(true);
 		}
 	};
 

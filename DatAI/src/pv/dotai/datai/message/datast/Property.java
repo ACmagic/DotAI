@@ -6,7 +6,8 @@ public class Property {
 
 	
 	public void readProperties(BitStream bs, DataTable ser) {
-		FieldPath fp = new FieldPath();
+		FieldPath fp = new FieldPath(ser);
+		
 		
 	}
 }
