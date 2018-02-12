@@ -16,6 +16,10 @@ public class BitStream {
 		this.position = 0;
 		this.bitposition = 0;
 	}
+	
+	public int position() {
+		return position;
+	}
 
 	public int nextBit() {
 		if (position >= buffer.capacity()) {

@@ -1,5 +1,9 @@
 package pv.dotai.datai.message;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import pv.dotai.datai.protobuf.Demo.CDemoPacket;
@@ -22,15 +26,34 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 	@Override
 	public void handle(CDemoPacket p) {
 		BitStream bs = new BitStream(p.getData().asReadOnlyByteBuffer());
+		List<PendingMessage> pendings = new ArrayList<>();
 		while (bs.remaining() >= 8) {
 			int cmd = bs.readBitVar();
 			int size = bs.readVarUInt32();
 			byte[] data = new byte[size];
 			bs.get(data);
-			if (SVC_Messages.forNumber(cmd) != null) {
-				handleSVC(cmd, data);
-			} else if (NET_Messages.forNumber(cmd) != null) {
-				handleNET(cmd, data);
+			pendings.add(new PendingMessage(cmd, data));
+		}
+		
+		pendings.sort(new Comparator<PendingMessage>() {
+			@Override
+			public int compare(PendingMessage a, PendingMessage b) {
+				int p = 0;
+				if(SVC_Messages.forNumber(a.getType()) == SVC_Messages.svc_CreateStringTable || SVC_Messages.forNumber(a.getType()) == SVC_Messages.svc_UpdateStringTable) {
+					p--;
+				}
+				if(SVC_Messages.forNumber(b.getType()) == SVC_Messages.svc_CreateStringTable || SVC_Messages.forNumber(b.getType()) == SVC_Messages.svc_UpdateStringTable) {
+					p++;
+				}
+				return p;
+			}
+		});
+		
+		for (PendingMessage pendingMessage : pendings) {
+			if (SVC_Messages.forNumber(pendingMessage.getType()) != null) {
+				handleSVC(pendingMessage.getType(), pendingMessage.getBuf());
+			} else if (NET_Messages.forNumber(pendingMessage.getType()) != null) {
+				handleNET(pendingMessage.getType(), pendingMessage.getBuf());
 			}
 		}
 	}
@@ -125,4 +148,22 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 		}
 	}
 
+	class PendingMessage {
+		
+		private final int type;
+		private final byte[] buf;
+		
+		public PendingMessage(int type, byte[] buf) {
+			this.type = type;
+			this.buf = buf;
+		}
+		
+		public int getType() {
+			return type;
+		}
+		
+		public byte[] getBuf() {
+			return buf;
+		}
+	}
 }

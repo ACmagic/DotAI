@@ -134,7 +134,7 @@ public class PropertySerializerTable {
 		
 		m = vecPat.matcher(name);
 		if(m.find()) {
-			PropertySerializer ps = new PropertySerializer(decoder, decoderContainer, true, 1024, null, name);
+			PropertySerializer ps = new PropertySerializer(decoder, decoderContainer, true, 1024, new PropertySerializer(null, null, false, 0, null, null), name);
 			this.propertySerializers.put(name, ps);
 			return ps;
 		}

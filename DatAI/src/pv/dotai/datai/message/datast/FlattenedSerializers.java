@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pv.dotai.datai.ReplayException;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializerField_t;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializer_t;
@@ -23,7 +24,7 @@ public class FlattenedSerializers {
 
 	public DataTable recurseTable(ProtoFlattenedSerializer_t s) {
 		DataTable table = new DataTable(this.proto.getSymbols(s.getSerializerNameSym()), s.getSerializerVersion());
-		System.out.println("\t"+table.getName());
+		System.out.println("TABLE: "+table.getName());
 		List<ProtoFlattenedSerializerField_t> props = this.proto.getFieldsList();
 		for (Integer i : s.getFieldsIndexList()) {
 			ProtoFlattenedSerializerField_t field = props.get(i);
@@ -99,15 +100,16 @@ public class FlattenedSerializers {
 			if(prop.getField().getSerializer().isArray()) {
 				DataTable tmp = new DataTable(prop.getField().getName(), 0);
 				for(int j = 0; j < prop.getField().getSerializer().getLength(); j++) {
-					String name = String.format("%04d", i);
-					DataTableField dtf = new DataTableField(name, prop.getField().getSerializer().getName(), i, prop.getField().getFlags(), prop.getField().getBitCount(), prop.getField().getLowValue(), prop.getField().getHighValue(), prop.getField().getVersion(), prop.getField().getSerializer().getArraySerializer(), this.build);
+					String name = String.format("%04d", j);
+					//TODO Array serializer is null sometimes
+					DataTableField dtf = new DataTableField(name, prop.getField().getSerializer().getName(), j, prop.getField().getFlags(), prop.getField().getBitCount(), prop.getField().getLowValue(), prop.getField().getHighValue(), prop.getField().getVersion(), prop.getField().getSerializer().getArraySerializer(), this.build);
 					dtf.setEncoder(prop.getField().getEncoder());
 					tmp.getProperties().add(new DataTableProperty(dtf, table));
 					
 					if(prop.getDataTable() != null) {
 						DataTable nTable = new DataTable(prop.getDataTable());
-						nTable.setName(String.format("%04d", i));
-						tmp.getProperties().get(tmp.getProperties().size()-1).setDataTable(nTable);
+						nTable.setName(String.format("%04d", j));
+						tmp.getProperties().get(tmp.getProperties().size() - 1).setDataTable(nTable);
 					}
 				}
 				
