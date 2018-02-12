@@ -68,6 +68,7 @@ public class ReplayBuilder {
 		
 		if(item.getValue() != null && item.getValue().length > 0) {
 			BitStream bs = new BitStream(ByteBuffer.wrap(item.getValue()));
+			System.out.println("Reading properties for "+item.getKey());
 			this.classBaseline.get(classID).readProperties(bs, serializer.get(0));
 		}
 	}
@@ -104,5 +105,9 @@ public class ReplayBuilder {
 
 	public Map<Integer, Property> getClassBaseline() {
 		return classBaseline;
+	}
+
+	public Map<Integer, Entity> getEntities() {
+		return entities;
 	}
 }

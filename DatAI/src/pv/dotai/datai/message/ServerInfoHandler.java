@@ -10,7 +10,7 @@ public class ServerInfoHandler implements MessageHandler<CSVCMsg_ServerInfo> {
 
 	@Override
 	public void handle(CSVCMsg_ServerInfo m) {
-		ReplayBuilder.getInstance().CLASSID_SIZE = (int) Math.round((Math.log(m.getMaxClasses() / Math.log(2)) + 1));
+		ReplayBuilder.getInstance().CLASSID_SIZE = (int) Math.floor((Math.log(m.getMaxClasses()) /  Math.log(2))) + 1;
 		Matcher matcher = Pattern.compile("/dota_v(\\d+)/").matcher(m.getGameDir());
 		System.out.println(m.getGameDir());
 		if(matcher.find()) {

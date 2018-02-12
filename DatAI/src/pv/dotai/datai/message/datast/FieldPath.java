@@ -13,7 +13,7 @@ public class FieldPath {
 	public final ArrayList<FieldPathField> fields;
 	public final ArrayList<Integer> path;
 	public boolean finished;
-	private HuffmanTree fpHuf;
+	private static HuffmanTree fpHuf = HuffmanUtil.buildFieldPathHuffman();
 	
 	public FieldPath(DataTable parent) {
 		this.parent = parent;
@@ -21,7 +21,6 @@ public class FieldPath {
 		this.path = new ArrayList<>();
 		this.path.add(-1);
 		this.finished = false;
-		this.fpHuf = HuffmanUtil.buildFieldPathHuffman();
 	}
 	
 	public void walk(BitStream bs) {
@@ -59,7 +58,6 @@ public class FieldPath {
 				throw new ReplayException("Expected table for type "+ cDT.getName() +" fp properties: "+ cDT.getProperties().get(this.path.get(i)).getField().getName() +", "+cDT.getProperties().get(this.path.get(i)).getField().getType());
 			}
 		}
-		
 		this.fields.add(new FieldPathField(name + cDT.getProperties().get(this.path.get(i)).getField().getName(), cDT.getProperties().get(this.path.get(i)).getField()));
 	}
 

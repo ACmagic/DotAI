@@ -107,7 +107,7 @@ public class PropertySerializerTable {
 						System.err.println("Unable to read vector type for " + name);
 					}
 				} else {
-					System.err.println("no decoder for type " + name);
+					System.err.println("No decoder for type " + name);
 				}
 				break;
 		}
