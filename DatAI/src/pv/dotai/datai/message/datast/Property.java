@@ -27,7 +27,7 @@ public class Property {
 				this.KV.put(field.getName(), field.getField().getSerializer().getDecode().decode(bs, field.getField()));
 			}
 			
-			System.out.println("Decoding name="+field.getName()+" type="+field.getField().getType()+" value="+KV.get(field.getName())+" position="+bs.position());
+			System.out.println("decoding pos="+bs.position() +" name="+field.getName()+" type="+field.getField().getType()+" value="+KV.get(field.getName()));
 		}
 	}
 }

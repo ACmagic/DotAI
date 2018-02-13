@@ -10,9 +10,18 @@ import pv.dotai.datai.util.BitStream;
 
 public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEntities> {	
 	
+	private boolean full = false;
+	
 	@Override
 	public void handle(CSVCMsg_PacketEntities m) {
 		BitStream bs = new BitStream(m.getEntityData().asReadOnlyByteBuffer());
+		
+		if(!m.getIsDelta() && full) {
+			return;
+		}
+		if(!m.getIsDelta()) {
+			full = true;
+		}
 		
 		System.out.println("Processing packet entities...");
 		int idx = -1;
@@ -49,7 +58,7 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 					Entity ce = new Entity(idx, classID, serial, property, classBaseline, className, flatTable);
 					
 					ReplayBuilder.getInstance().getEntities().put(idx	, ce);
-					System.out.println("Entity "+ce.getClassName()+" created ("+idx+")");					
+					System.out.println("Entity "+ce.getClassName()+" created ("+idx+")" + ce.getClassID());					
 					break;
 				case DELETE:
 					System.out.println("Entity "+ReplayBuilder.getInstance().getEntities().get(idx).getClassName()+" deleted ("+idx+")");

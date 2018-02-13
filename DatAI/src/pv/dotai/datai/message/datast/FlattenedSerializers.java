@@ -24,14 +24,12 @@ public class FlattenedSerializers {
 
 	public DataTable recurseTable(ProtoFlattenedSerializer_t s) {
 		DataTable table = new DataTable(this.proto.getSymbols(s.getSerializerNameSym()), s.getSerializerVersion());
-		System.out.println("TABLE: "+table.getName());
 		List<ProtoFlattenedSerializerField_t> props = this.proto.getFieldsList();
 		for (Integer i : s.getFieldsIndexList()) {
 			ProtoFlattenedSerializerField_t field = props.get(i);
 			DataTableProperty prop = new DataTableProperty(null, null);
 			prop.setField(new DataTableField(this.proto.getSymbols(field.getVarNameSym()), this.proto.getSymbols(field.getVarTypeSym()), -1, field.getEncodeFlags(), field.getBitCount(), field.getLowValue(), field.getHighValue(), field.getFieldSerializerVersion(), null, build));
 			this.propertySerializerTable.FillSerializer(prop.getField());
-			System.out.println("\t\t"+prop.getField().getName());
 			if (field.hasVarEncoderSym()) {
 				prop.getField().setEncoder(this.proto.getSymbols(field.getVarEncoderSym()));
 			} else {
