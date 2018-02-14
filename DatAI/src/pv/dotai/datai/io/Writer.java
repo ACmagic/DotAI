@@ -31,7 +31,7 @@ public class Writer {
         					pWriter.print("PLAYER: "+entity.getValue().fetchProperty("m_iPlayerID")+" ; ");
         				}
         				pWriter.print("WX: "+getWorldX(entity.getValue())+" ; ");
-        				pWriter.print("WY: "+getWorldY(entity.getValue())+" ; ");
+        				pWriter.print("WY: "+getWorldY(entity.getValue()));
         				pWriter.println();
 				}
 			}
