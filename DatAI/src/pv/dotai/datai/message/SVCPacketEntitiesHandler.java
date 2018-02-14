@@ -23,7 +23,6 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 			full = true;
 		}
 		
-		System.out.println("Processing packet entities...");
 		int idx = -1;
 		for (int i = 0; i < m.getUpdatedEntries(); i++) {
 			int delta = bs.readBitVar();

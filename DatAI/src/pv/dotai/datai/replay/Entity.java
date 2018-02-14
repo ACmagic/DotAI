@@ -13,7 +13,7 @@ public class Entity {
 	private String className;
 	private DataTable flatTable;
 	
-	public Entity(int index, int classID, int serial, pv.dotai.datai.message.datast.Property property, pv.dotai.datai.message.datast.Property classBaseline, String className, DataTable flatTable) {
+	public Entity(int index, int classID, int serial, Property property, Property classBaseline, String className, DataTable flatTable) {
 		this.index = index;
 		this.classID = classID;
 		this.serial = serial;
@@ -21,6 +21,13 @@ public class Entity {
 		this.classBaseline = classBaseline;
 		this.className = className;
 		this.flatTable = flatTable;
+	}
+	
+	public Object fetchProperty(String key) {
+		if(property.getKV().get(key) != null) {
+			return property.getKV().get(key);
+		}
+		return classBaseline.getKV().get(key);
 	}
 
 	public int getIndex() {

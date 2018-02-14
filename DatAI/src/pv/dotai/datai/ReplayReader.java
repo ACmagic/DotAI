@@ -75,6 +75,7 @@ public class ReplayReader {
 			dis.readInt();
 			dis.readInt();
 			//Read all atoms
+			int lastTick = -1;
 			while(dis.available() > 0) {
 				int commandID = getVarInt(dis);
 				boolean compressed = (commandID & EDemoCommands.DEM_IsCompressed.getNumber()) == EDemoCommands.DEM_IsCompressed.getNumber();
@@ -141,6 +142,10 @@ public class ReplayReader {
 					default:
 						break;
 
+				}
+				if(lastTick < tick) {
+					lastTick = tick;
+					ReplayBuilder.getInstance().snapshot(tick);
 				}
 			}
 		} catch (FileNotFoundException e) {

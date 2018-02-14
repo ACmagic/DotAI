@@ -7,7 +7,7 @@ import pv.dotai.datai.util.BitStream;
 
 public class Property {
 
-	private Map<String, Object> KV;
+	private final Map<String, Object> KV;
 	
 	public Property() {
 		KV = new HashMap<>();
@@ -26,8 +26,10 @@ public class Property {
 			} else {
 				this.KV.put(field.getName(), field.getField().getSerializer().getDecode().decode(bs, field.getField()));
 			}
-			
-			System.out.println("decoding pos="+bs.position() +" name="+field.getName()+" type="+field.getField().getType()+" value="+KV.get(field.getName()));
 		}
+	}
+
+	public Map<String, Object> getKV() {
+		return KV;
 	}
 }

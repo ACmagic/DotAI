@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import pv.dotai.datai.io.Writer;
 import pv.dotai.datai.message.datast.DataTable;
 import pv.dotai.datai.message.datast.Property;
 import pv.dotai.datai.message.datast.StringTable;
@@ -13,6 +14,7 @@ import pv.dotai.datai.replay.Entity;
 import pv.dotai.datai.util.BitStream;
 
 public class ReplayBuilder {
+	
 	public int CLASSID_SIZE;
 	public int GAME_BUILD;
 	
@@ -22,12 +24,22 @@ public class ReplayBuilder {
 	private final Map<Integer, Property> classBaseline;
 	private boolean classInfoComplete = false;
 	private final StringTables stringTables;
+	private final Writer writer;
 	
 	public ReplayBuilder() {
 		this.entities = new HashMap<>();
 		this.classInfo = new HashMap<>();
 		this.stringTables = new StringTables();
 		this.classBaseline = new HashMap<>();
+		this.writer = new Writer();
+	}
+	
+	public void snapshot(int tick) {
+		writer.write(tick);
+	}
+	
+	public void finish() {
+		writer.finish();
 	}
 	
 	public void updateInstanceBaseline() {
@@ -68,7 +80,6 @@ public class ReplayBuilder {
 		
 		if(item.getValue() != null && item.getValue().length > 0) {
 			BitStream bs = new BitStream(ByteBuffer.wrap(item.getValue()));
-			System.out.println("Reading properties for "+item.getKey());
 			this.classBaseline.get(classID).readProperties(bs, serializer.get(0));
 		}
 	}

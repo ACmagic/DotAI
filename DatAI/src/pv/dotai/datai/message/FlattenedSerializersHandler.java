@@ -17,9 +17,7 @@ public class FlattenedSerializersHandler implements MessageHandler<CSVCMsg_Flatt
 		for (ProtoFlattenedSerializer_t s : m.getSerializersList()) {
 			String name = m.getSymbols(s.getSerializerNameSym());
 			int ver = s.getSerializerVersion();
-			
-			System.out.println("FLATTENED "+name+" "+ver);
-			
+						
 			if(fs.getSerializers().get(name) == null) {
 				fs.getSerializers().put(name, new HashMap<>());
 			}

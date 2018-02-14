@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pv.dotai.datai.ReplayException;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializerField_t;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializer_t;
@@ -99,7 +98,6 @@ public class FlattenedSerializers {
 				DataTable tmp = new DataTable(prop.getField().getName(), 0);
 				for(int j = 0; j < prop.getField().getSerializer().getLength(); j++) {
 					String name = String.format("%04d", j);
-					//TODO Array serializer is null sometimes
 					DataTableField dtf = new DataTableField(name, prop.getField().getSerializer().getName(), j, prop.getField().getFlags(), prop.getField().getBitCount(), prop.getField().getLowValue(), prop.getField().getHighValue(), prop.getField().getVersion(), prop.getField().getSerializer().getArraySerializer(), this.build);
 					dtf.setEncoder(prop.getField().getEncoder());
 					tmp.getProperties().add(new DataTableProperty(dtf, table));

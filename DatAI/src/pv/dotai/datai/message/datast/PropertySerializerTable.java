@@ -101,13 +101,12 @@ public class PropertySerializerTable {
 					Matcher m = vecPat.matcher(name);
 					if (m.find()) {
 						decoderContainer = Decoders::decodeVector;
-						System.out.println(m.group(1));
 						decoder = this.getPropertySerializerByName(m.group(1)).getDecode();
 					} else {
 						System.err.println("Unable to read vector type for " + name);
 					}
 				} else {
-					System.err.println("No decoder for type " + name);
+					//System.err.println("No decoder for type " + name);
 				}
 				break;
 		}
