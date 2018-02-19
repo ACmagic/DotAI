@@ -7,7 +7,6 @@
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage{graphicx}   
-\usepackage{bibtex}   
 
 \title{DotAI - Projet de semestre}
 \author{Thomas Ibanez}
@@ -15,16 +14,23 @@
 
 \begin{document}
 \maketitle
-
+\newpage
 \section{Introduction}
 
-Le but de ce projet de semestre est de créer un ensemble de logiciels permettant de présenter les données contenues sur \url{opendota.com} pour le développement d'un logiciel d'apprentissage automatique sur le jeu DotA 2
+Le but de ce projet de semestre est de créer un ensemble de logiciels permettant de présenter les données contenues sur \url{opendota.com} pour le développement d'un logiciel d'apprentissage automatique sur le jeu DotA 2.
 
 \subsection{DotA 2}
 
-DotA 2 est jeu-vidéo multijoueur de type bataille en arène (MOBA) où 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs chacun controllant un héro choisi parmis les héros disponnibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). Il y a à l'heure actuelle le jeu propose 115\bibitem{bl}115, \url{http://www.dota2.com/heroes/?l=french} héros, chacuns disposant de 5 attaques différentes La partie se déroule sur une carte symétrique dont voici une vue aérienne: \\
-\includegraphics[scale=1]{"minimap.png"}
+DotA 2 est jeu-vidéo multijoueur de type bataille en arène (MOBA) où 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs chacun controllant un héro choisi parmis les héros disponnibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). Il y a à l'heure actuelle le jeu propose 115 héros, chacuns disposant de 5 attaques différentes La partie se déroule sur une carte symétrique constituté de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
+\begin{center}
+	\includegraphics[scale=1]{"minimap.png"} 
+\end{center}
 
+Chaque équipe commence dans un coin de la carte (en bas à gauche et en haut à droite), le but pour chaque héros est de controler une partie de la carte et détruire les tours ennemies (T) afin d'arriver jusqu'a la base adverse (A) et de la détruire.\\
 
+En plus des héros chaque base va périodiquement créer des "creeps", sortes de petit monstres qui vont se déplacer sur une lane.
 
+\section{Recupération des informations d'OpenDota}
+
+Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match
 \end{document}
