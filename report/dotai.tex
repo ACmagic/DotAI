@@ -32,5 +32,32 @@ En plus des héros chaque base va périodiquement créer des "creeps", sortes de
 
 \section{Recupération des informations d'OpenDota}
 
-Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match
+Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match.\\
+Dans un premier temps M. Malaspinas et moi-même pensions que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entitées à chaque instant. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
+
+\section{Analyse des fichiers .dem}
+
+Les fichiers .dem sont des fichiers contenant toutes les informations dont on pourrait vouloir sur une partie allant de entités présentes sur la carte jusqu'au commentaires audio si disponnibles. Un fichier .dem pour une partie standard ({\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}30 Minutes) pèse {\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}50Mo.
+
+\subsection{Format}
+
+Le format global de ces fichiers est assez simple. Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2. Soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
+Une fois ce header lu le fichier contient 8-bytes dont l'utilitée n'est pas connue.\\
+
+La suite du fichier est une série d'entrées de ce type:\\
+\begin{center}
+	\begin{tabular}{| l | l |}
+  	 \hline
+  		 Nom & Type \\
+  	 \hline
+ 	  	  ID & VarInt  \\
+  		 Tick & VarInt  \\
+  		 Taille & VarInt \\
+  		 Données & Bytes \\
+   	\hline
+	\end{tabular}
+\end{center}
+
+Note: Les varints
+
 \end{document}
