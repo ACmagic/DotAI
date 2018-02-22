@@ -12,6 +12,7 @@ public class FullPacketHandler implements MessageHandler<CDemoFullPacket> {
 	
 	@Override
 	public void handle(CDemoFullPacket m) {
+		this.router.sendMessage(m.getStringTable());
 		this.router.sendMessage(m.getPacket());
 	}
 

@@ -1,0 +1,10 @@
+message CDemoPacket {
+	optional int32 sequence_in = 1;
+	optional int32 sequence_out_ack = 2;
+	optional bytes data = 3;
+}
+
+message CDemoFullPacket {
+	optional .CDemoStringTables string_table = 1;
+	optional .CDemoPacket packet = 2;
+}

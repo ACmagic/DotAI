@@ -6,7 +6,8 @@
 \usepackage[frenchb]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
-\usepackage{graphicx}   
+\usepackage{graphicx}
+\usepackage{minted}
 
 \title{DotAI - Projet de semestre}
 \author{Thomas Ibanez}
@@ -41,8 +42,11 @@ Les fichiers .dem sont des fichiers contenant toutes les informations dont on po
 
 \subsection{Format}
 
-Le format global de ces fichiers est assez simple. Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2. Soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
+Le format global de ces fichiers est assez simple. DotA utilise protobuf, une technologie de sérialization développée par google pour encoder ces fichiers. Le protocole est maintenu à jour par l'équipe SteamRE sur \url{https://github.com/SteamRE/SteamKit/tree/master/Resources/Protobufs/dota} \\
+Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2. Soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
 Une fois ce header lu le fichier contient 8-bytes dont l'utilitée n'est pas connue.\\
+
+\subsubsection{Format global}
 
 La suite du fichier est une série d'entrées de ce type:\\
 \begin{center}
@@ -50,7 +54,7 @@ La suite du fichier est une série d'entrées de ce type:\\
   	 \hline
   		 Nom & Type \\
   	 \hline
- 	  	  ID & VarInt  \\
+ 	  	 ID & VarInt  \\
   		 Tick & VarInt  \\
   		 Taille & VarInt \\
   		 Données & Bytes \\
@@ -58,6 +62,25 @@ La suite du fichier est une série d'entrées de ce type:\\
 	\end{tabular}
 \end{center}
 
-Note: Les varints
+Note: Les varints sont des entiers encodés sur une longeur variable de bits. Cet encocodage est détaillé sur \url{https://developers.google.com/protocol-buffers/docs/encoding#varints} \\
+
+L'ID va indiquer le type du message parmis la liste définie dans le protocole:
+\inputminted[breaklines,breaksymbol=, frame=single,label=Messages, stepnumber=1,tabsize=2]{Protobuf}{messages.proto}
+
+La seule exception est \textit{DEM\_IsCompressed} qui n'est pas un type de message mais qui défini un bit (6ème bit) qui s'il est égal à 1, alors le message doit être décompressé via la librairie snappy avant d'être interpreté.\\
+
+Le Tick va définir le moment dans la partie ou le message arrive. \\
+
+Le champ Taille indique la taille en bytes des données de ce message.\\
+
+Une fois ces informations connues nous pouvons lancer le décodage via protobuf afin d'obtenir le message, du moins c'est le cas pour tout les ID sauf DEM\_SignonPacket, DEM\_Packet, DEM\_FullPacket et DEM\_SaveGame. Pour ces messages-ci il va falloir lire les données intégrées.\\
+
+\subsubsection{Données intégrées}
+
+Les données intégrées sont basiquement un message encodé dans un autre message. Dans notre cas un DEM\_Packet et un DE\_FullPacket sont définis comme: 
+\inputminted[breaklines,breaksymbol=, frame=single,label=Packets, stepnumber=1,tabsize=2]{Protobuf}{dem_packet.proto}
+Les DEM\_SignonPacket n'ont pas de définition distincte, leur structure est la même qu'un DEM\_Packet.
+Les DEM\_FullPacket sont en fait composés d'une \textit{StringTable} et d'un DEM\_Packet qu'il faudra interprêter comme les autres DEM\_Packet.\\
+
 
 \end{document}
