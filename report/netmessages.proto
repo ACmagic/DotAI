@@ -1,0 +1,41 @@
+enum SVC_Messages {
+	svc_ServerInfo = 40;
+	svc_FlattenedSerializer = 41;
+	svc_ClassInfo = 42;
+	svc_SetPause = 43;
+	svc_CreateStringTable = 44;
+	svc_UpdateStringTable = 45;
+	svc_VoiceInit = 46;
+	svc_VoiceData = 47;
+	svc_Print = 48;
+	svc_Sounds = 49;
+	svc_SetView = 50;
+	svc_ClearAllStringTables = 51;
+	svc_CmdKeyValues = 52;
+	svc_BSPDecal = 53;
+	svc_SplitScreen = 54;
+	svc_PacketEntities = 55;
+	svc_Prefetch = 56;
+	svc_Menu = 57;
+	svc_GetCvarValue = 58;
+	svc_StopSound = 59;
+	svc_PeerList = 60;
+	svc_PacketReliable = 61;
+	svc_HLTVStatus = 62;
+	svc_FullFrameSplit = 70;
+}
+
+enum NET_Messages {
+	net_NOP = 0;
+	net_Disconnect = 1;
+	net_SplitScreenUser = 3;
+	net_Tick = 4;
+	net_StringCmd = 5;
+	net_SetConVar = 6;
+	net_SignonState = 7;
+	net_SpawnGroup_Load = 8;
+	net_SpawnGroup_ManifestUpdate = 9;
+	net_SpawnGroup_SetCreationTick = 11;
+	net_SpawnGroup_Unload = 12;
+	net_SpawnGroup_LoadCompleted = 13;
+}

@@ -1,0 +1,22 @@
+message CSVCMsg_ServerInfo {
+	optional int32 protocol = 1;
+	optional int32 server_count = 2;
+	optional bool is_dedicated = 3;
+	optional bool is_hltv = 4;
+	optional bool is_replay = 5;
+	optional int32 c_os = 6;
+	optional fixed32 map_crc = 7;
+	optional fixed32 client_crc = 8;
+	optional fixed32 string_table_crc = 9;
+	optional int32 max_clients = 10;
+	optional int32 max_classes = 11;
+	optional int32 player_slot = 12;
+	optional float tick_interval = 13;
+	optional string game_dir = 14;
+	optional string map_name = 15;
+	optional string sky_name = 16;
+	optional string host_name = 17;
+	optional string addon_name = 18;
+	optional .CSVCMsg_GameSessionConfiguration game_session_config = 19;
+	optional bytes game_session_manifest = 20;
+}

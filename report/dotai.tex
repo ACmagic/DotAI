@@ -22,7 +22,7 @@ Le but de ce projet de semestre est de créer un ensemble de logiciels permettan
 
 \subsection{DotA 2}
 
-DotA 2 est jeu-vidéo multijoueur de type bataille en arène (MOBA) où 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs chacun controllant un héro choisi parmis les héros disponnibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). Il y a à l'heure actuelle le jeu propose 115 héros, chacuns disposant de 5 attaques différentes La partie se déroule sur une carte symétrique constituté de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
+DotA 2 est jeu-vidéo multijoueur de type bataille en arène (MOBA) où 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs chacun controllant un héro choisi parmis les héros disponnibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). A l'heure actuelle le jeu propose 115 héros, chacuns disposant de 5 attaques différentes. La partie se déroule sur une carte symétrique constituté de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
 \begin{center}
 	\includegraphics[scale=1]{"minimap.png"} 
 \end{center}
@@ -42,7 +42,7 @@ Les fichiers .dem sont des fichiers contenant toutes les informations dont on po
 
 \subsection{Format}
 
-Le format global de ces fichiers est assez simple. DotA utilise protobuf, une technologie de sérialization développée par google pour encoder ces fichiers. Le protocole est maintenu à jour par l'équipe SteamRE sur \url{https://github.com/SteamRE/SteamKit/tree/master/Resources/Protobufs/dota} \\
+Le format global de ces fichiers est assez simple. DotA utilise protobuf, une technologie de sérialization développée par google, pour encoder ces fichiers. Le protocole est maintenu à jour par l'équipe SteamRE sur \url{https://github.com/SteamRE/SteamKit/tree/master/Resources/Protobufs/dota} \\
 Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2. Soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
 Une fois ce header lu le fichier contient 8-bytes dont l'utilitée n'est pas connue.\\
 
@@ -77,10 +77,89 @@ Une fois ces informations connues nous pouvons lancer le décodage via protobuf 
 
 \subsubsection{Données intégrées}
 
-Les données intégrées sont basiquement un message encodé dans un autre message. Dans notre cas un DEM\_Packet et un DE\_FullPacket sont définis comme: 
+Les données intégrées sont basiquement un message encodé dans un autre message. Dans notre cas un DEM\_Packet et un DEM\_FullPacket sont définis comme: 
 \inputminted[breaklines,breaksymbol=, frame=single,label=Packets, stepnumber=1,tabsize=2]{Protobuf}{dem_packet.proto}
 Les DEM\_SignonPacket n'ont pas de définition distincte, leur structure est la même qu'un DEM\_Packet.
 Les DEM\_FullPacket sont en fait composés d'une \textit{StringTable} et d'un DEM\_Packet qu'il faudra interprêter comme les autres DEM\_Packet.\\
 
+Comme on peut le constater un packet n'est en vérité que composé de numéros de séquences (qui ne sont pas intéressants dans notre cas) et d'une suite de bytes qu'il nous faut interprêter. L'intérprétation de ce champ est la suivante: Il s'agit d'une série de sous-messages dont encodés d'une manière ressemblant au format global du fichier:
 
+\begin{center}
+	\begin{tabular}{| l | l |}
+  	 \hline
+  		 Nom & Type \\
+  	 \hline
+ 	  	 ID & Bitvar  \\
+  		 Taille & VarInt \\
+  		 Données & Bytes \\
+   	\hline
+	\end{tabular}
+\end{center}
+
+Ce qu'il faut remarqué c'est que l'ID est encodé en tant que "bitvar" et non pas en tant que VarInt. Ce format est un petit peu particulier et implique un désalignement:
+
+\begin{verbatim}
+Byte No: |       0       ||       1       ||       2       ||       3       ||      4  //
+Bit No:  |0 1 2 3|4 5 6 7||0 1 2 3|4 5 6 7||0 1 2 3|4 5 6 7||0 1 2 3|4 5 6 7||0 1      // 
+         |-------|-------||-------|-------||-------|-------||-------|-------||---     //
+Valeur:  |X Y 0 0|0 0 1 1||1 1 2 2|2 2 3 3||3 3 3 3|3 3 3 3||3 3 3 3|3 3 3 3||3 3     //
+\end{verbatim}
+
+Les bits "X", "Y" et "0" doivent obligatoirement être lus. Ensuite: 
+\begin{itemize}
+\item Si Y vaut 1, il faut lire 4 bits supplémentaires (les bits "1")
+\item Si X vaut 1, il faut lire 8 bits supplémentaires (les bits "1" et "2")
+\item Si X et Y valent 1, il faut lire 28 bits supplémentaires (les bits "1", "2" et "3")
+\end{itemize}
+\vspace*{\baselineskip}
+Note: Comme on peut le constater, la lecture de cette variable ne s'arrête non pas à la fin d'un byte mais bel et bien au millieu. Nous ne sommes donc plus alignés sur une base de 8 bits ce qui m'a obligé à créer un flux de lecture bit par bit au lieu d'utiliser un des flux disponnibles avec java qui sont tous byte par byte.
+\vspace*{\baselineskip}\\
+La valeur est ensuite construite de la manière suivante: Les 4 bits "0" sont les bits de poids faible, les autres bits restent dans l'ordre dans lequel ils sont écrits (les "1" en poids fort).\\
+
+Le champs taille défini la taille des données de ce sous-packet. Les données sont à nouveau une structure encodée via protobuf, cette structure peut être de type NET\_Message ou SVC\_Message (également d'autres types possible mais ils ne nous intéressent pas). \\
+
+Voici les enums SVC\_Messages et NET\_Messages:
+
+\inputminted[breaklines,breaksymbol=, frame=single,label=Messages, stepnumber=1,tabsize=2]{Protobuf}{netmessages.proto}
+
+Dans ce projet, étant donné que nous ne cherchons pas à créer un interpreteur complet, ce sont les messages svc\_CreateStringTable, svc\_UpdateStringTable, svc\_PacketEntities et svc\_ServerInfo qui vont nous intéresser par le suite. 
+
+\subsection{Données}
+
+Revenons au début du fichier, directement après le magic et les 8-bytes à sauter nous allons trouver un message de type DEM\_FileHeader. Ce message contient des méta-données sur le fichier, par exemple:
+\begin{verbatim}
+demo_file_stamp: "PBDEMS2\000"
+network_protocol: 44
+server_name: "Valve Dota 2 Europe Server (srcds122.133.57)"
+client_name: "SourceTV Demo"
+map_name: "start"
+game_directory: "/opt/srcds/dota/dota_v2432/dota"
+fullpackets_version: 2
+allow_clientside_entities: true
+allow_clientside_particles: true
+addons: ""
+\end{verbatim}
+Ces informations ne nous sont cependant pas utiles.\\
+Nous trouvons ensuite une série de DEM\_SignonPacket, l'un d'entre eux contient un sous-message de type svc\_ServerInfo dont voici la structure:
+\inputminted[breaklines,breaksymbol=, frame=single,label=ServerInfo, stepnumber=1,tabsize=2]{Protobuf}{serverinfo.proto}
+Le champ game\_dir va nous permettre de déterminer la version de DotA 2 utilisée, ce qui nous sera utile par la suite. Le contenu du champ ressemble à ça "/opt/srcds/dota/dota\_v2432/dota" (à noter que ce champ est également présent dans le message DEM\_FileHeader. La partie qui nous interesse est "v2432" qui nous indique que le replay à été créer avec la version 2432 de DotA 2.\\
+
+Nous trouvons ensuite des DEM\_Packets qui contiennent des sous-messages de type svc\_CreateStringTable qui vont servir, comme leur nom l'indique à créer des "String Tables".
+
+\subsubsection{String Tables}
+
+Une String Table est une table nomée, composée d'une série d'entrées ayant un index (entier), une clef (chaine de caractères) et une valeur (chaine de bytes) bien que le clef comme la valeur puisse ne pas être définie (null). Voici pour illustrer une petite partie de la String Table "EntityNames" (la table entière contient 251 entrées)
+\begin{center}
+	\begin{tabular}{| l | l | l |}
+  	 \hline
+  		 Index & Clef & Valeur\\
+  	 \hline
+ 	  	 24 & dark\_troll\_warlord\_ensnare & null  \\
+  		 25 & dark\_troll\_warlord\_raise\_dead & null \\
+  		 26 & polar\_furbolg\_ursa\_warrior\_thunder\_clap & null \\
+   	\hline
+	\end{tabular}
+\end{center}
+
+La totalité du contenu de la String Table est englobé dans le champ $StringData$, cependant il est possible que ce champ soit compressé.
 \end{document}
