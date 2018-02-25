@@ -7,6 +7,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{afterpage}
 \usepackage{minted}
 
 \title{DotAI - Projet de semestre}
@@ -161,5 +162,20 @@ Une String Table est une table nomée, composée d'une série d'entrées ayant u
 	\end{tabular}
 \end{center}
 
-La totalité du contenu de la String Table est englobé dans le champ $StringData$, cependant il est possible que ce champ soit compressé.
+La totalité du contenu de la String Table est englobé dans le champ $StringData$, cependant il est possible que ce champ soit compressé avec la librairie Snappy pour les replay plus récents ou avec LZSS pour les plus anciens. Pour savoir quelle méthode est utilisée on peut vérifier si les 4 premiers bytes composent la chaine de caractères "LZSS".\\
+Une fois décompressé si besoin nous pouvons commencer la lecture, il nous faut dans un premier temps déclarer un buffer circulaire de 32 éléments qui va constituer un historique des clefs lues.\\
+
+\afterpage{%
+\begin{figure}[!htbp]
+\centering
+\vspace*{-3cm}
+\thispagestyle{empty}
+\includegraphics[scale=0.42]{st.png}
+\end{figure}
+\clearpage
+}
+\newpage
+
+
+
 \end{document}
