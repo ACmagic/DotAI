@@ -1,0 +1,3 @@
+message CDemoSendTables {
+	optional bytes data = 1;
+}

@@ -176,6 +176,16 @@ Une fois décompressé si besoin nous pouvons commencer la lecture, il nous faut
 }
 \newpage
 
+Une fois toutes ces String tables lues nous allons recevoir un packet contenant les "Send Tables" qu'il va falloir lire également.
+
+\subsubsection{Send Tables}
+
+La définition d'une SendTable est très simple:
+\inputminted[breaklines,breaksymbol=, frame=single,label=SendTable, stepnumber=1,tabsize=2]{Protobuf}{sendtable.proto}
+Comme on peut le constater il n'y a qu'un champ $data$ qui est une suite de bytes, il va donc falloir le décoder.\\
+En vériter le décodage du champs $data$ est simple, il faut d'abort lire un varint qui va nous indiquez une taille, puis lire cette taille (en bytes) afin d'obtenir une structure de type svc\_FlattenedSerializer
+
+\inputminted[breaklines,breaksymbol=, frame=single,label=FlattenedSerializer, stepnumber=1,tabsize=2]{Protobuf}{flattened.proto}
 
 
 \end{document}
