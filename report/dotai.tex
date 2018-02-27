@@ -12,11 +12,17 @@
 
 \title{DotAI - Projet de semestre}
 \author{Thomas Ibanez}
+\makeindex
 
 
 \begin{document}
 \maketitle
+
+
+\tableofcontents
+
 \newpage
+
 \section{Introduction}
 
 Le but de ce projet de semestre est de créer un ensemble de logiciels permettant de présenter les données contenues sur \url{opendota.com} pour le développement d'un logiciel d'apprentissage automatique sur le jeu DotA 2.
@@ -183,9 +189,46 @@ Une fois toutes ces String tables lues nous allons recevoir un packet contenant 
 La définition d'une SendTable est très simple:
 \inputminted[breaklines,breaksymbol=, frame=single,label=SendTable, stepnumber=1,tabsize=2]{Protobuf}{sendtable.proto}
 Comme on peut le constater il n'y a qu'un champ $data$ qui est une suite de bytes, il va donc falloir le décoder.\\
-En vériter le décodage du champs $data$ est simple, il faut d'abort lire un varint qui va nous indiquez une taille, puis lire cette taille (en bytes) afin d'obtenir une structure de type svc\_FlattenedSerializer
+Heureusement le décodage du champ $data$ est simple, il faut d'abort lire un varint qui va nous indiquez une taille, puis lire cette taille (en bytes) afin d'obtenir une structure de type svc\_FlattenedSerializer
 
 \inputminted[breaklines,breaksymbol=, frame=single,label=FlattenedSerializer, stepnumber=1,tabsize=2]{Protobuf}{flattened.proto}
+
+Les flattened serializers vont nous permettre de connaitre toutes les structures qui vont être lues par la suite, les champs qui les composent et leurs types respectifs. En revanche ils n'expliquent en rien la façon dont il faudra lire les différents types.\\
+Voici un exemple de structure (CBodyComponentBaseModelEntity) et ses champs avec leurs types.
+\begin{verbatim}
+Serializer: CBodyComponentBaseModelEntity
+    m_cellX uint16
+    m_cellY uint16
+    m_cellZ uint16
+    m_vecX CNetworkedQuantizedFloat
+    m_vecY CNetworkedQuantizedFloat
+    m_vecZ CNetworkedQuantizedFloat
+    m_hParent CGameSceneNodeHandle
+    m_angRotation QAngle
+    m_flScale float32
+    m_nOutsideWorld uint16
+    m_hModel CStrongHandle< InfoForResourceTypeCModel >
+    m_MeshGroupMask uint64
+    m_nDebugIndex int32
+    m_nIdealMotionType int8
+    m_ProceduralTargetContexts CUtlVector< CNetworkedIKProceduralTargetContext >
+    m_name CUtlStringToken
+    m_hierarchyAttachName CUtlStringToken
+    m_bIsRenderingEnabled bool
+    m_bIsAnimationEnabled bool
+    m_materialGroup CUtlStringToken
+    m_nHitboxSet uint8
+\end{verbatim}
+
+A noter que certains types ne sont pas atomiques mais référencent une autre structure.\\
+La manière de décoder chaque type est définie dans la classe $Decoders$ du programme. Il y actuellement 15 décodeurs implémentés.\\
+Maintenant que nous avons nos structures et nos tables nous allons pouvoir décoder les entités (svc\_PacketEntities).
+
+\subsubsection{PacketEntities}
+
+Les données intégrées de type svc\_PacketEntities forment le coeur du fichier. En effet dans ce format tout est une entité, du "monde" dans lequel le jeu se passe, aux héros controlés par les joueurs en passant par les équipes.\\
+Voici la structure de ce type de message:
+\inputminted[breaklines,breaksymbol=, frame=single,label=Entities, stepnumber=1,tabsize=2]{Protobuf}{entities.proto}
 
 
 \end{document}

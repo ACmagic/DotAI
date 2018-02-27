@@ -1,0 +1,12 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}DotA 2}{2}{subsection.1.1}
+\contentsline {section}{\numberline {2}Recupération des informations d'OpenDota}{3}{section.2}
+\contentsline {section}{\numberline {3}Analyse des fichiers .dem}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Format}{3}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Format global}{3}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}Données intégrées}{4}{subsubsection.3.1.2}
+\contentsline {subsection}{\numberline {3.2}Données}{7}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}String Tables}{8}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Send Tables}{10}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}PacketEntities}{11}{subsubsection.3.2.3}
