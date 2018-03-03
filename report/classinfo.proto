@@ -1,0 +1,9 @@
+message CDemoClassInfo {
+	message class_t {
+		optional int32 class_id = 1;
+		optional string network_name = 2;
+		optional string table_name = 3;
+	}
+
+	repeated .CDemoClassInfo.class_t classes = 1;
+}

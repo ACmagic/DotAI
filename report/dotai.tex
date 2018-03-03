@@ -18,7 +18,7 @@
 \begin{document}
 \maketitle
 
-
+\newpage
 \tableofcontents
 
 \newpage
@@ -41,7 +41,7 @@ En plus des héros chaque base va périodiquement créer des "creeps", sortes de
 \section{Recupération des informations d'OpenDota}
 
 Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match.\\
-Dans un premier temps M. Malaspinas et moi-même pensions que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entitées à chaque instant. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
+Dans un premier temps M. Malaspinas et moi-même pensions que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
 
 \section{Analyse des fichiers .dem}
 
@@ -168,6 +168,8 @@ Une String Table est une table nomée, composée d'une série d'entrées ayant u
 	\end{tabular}
 \end{center}
 
+Cependant, pour ce projet la seule table qui va nous intéresser est la table "instancebaseline" qui contient les identifiants de toutes les entités qui ont des propriétés à lire avant leur création.\\
+
 La totalité du contenu de la String Table est englobé dans le champ $StringData$, cependant il est possible que ce champ soit compressé avec la librairie Snappy pour les replay plus récents ou avec LZSS pour les plus anciens. Pour savoir quelle méthode est utilisée on peut vérifier si les 4 premiers bytes composent la chaine de caractères "LZSS".\\
 Une fois décompressé si besoin nous pouvons commencer la lecture, il nous faut dans un premier temps déclarer un buffer circulaire de 32 éléments qui va constituer un historique des clefs lues.\\
 
@@ -222,7 +224,22 @@ Serializer: CBodyComponentBaseModelEntity
 
 A noter que certains types ne sont pas atomiques mais référencent une autre structure.\\
 La manière de décoder chaque type est définie dans la classe $Decoders$ du programme. Il y actuellement 15 décodeurs implémentés.\\
-Maintenant que nous avons nos structures et nos tables nous allons pouvoir décoder les entités (svc\_PacketEntities).
+
+\subsubsection{ClassInfos}
+
+Les classinfos sont une information essentielle au décodage du fichier, en effet chaque fois qu'une entité est réferencée, au lieu de l'obtenir par son nom qui peut être très long comme "CDOTA\_Ability\_Alchemist\_UnstableConcoctionThrow" (48 bytes - 384 bits) le fichier va se servir d'un indentifiant de type nombre entier contenu entre 0 et 754 pour les fichiers récents donc seulement 10 bits (donc un gain de 374 bits à chaque référence de "CDOTA\_Ability\_Alchemist\_UnstableConcoctionThrow").\\
+
+Voici le format de ce message:
+\inputminted[breaklines,breaksymbol=, frame=single,label=ClassInfos, stepnumber=1,tabsize=2]{Protobuf}{classinfo.proto}
+
+Il s'agit donc d'une série d'entrées contenant un indentifiant, un nom réseau et nom de table. L'identifiant est le nombre qui permettra de réferencer l'entité par la suite. Le nom réseau est le nom complet de l'entité qui permet également de la retrouver dans les StringTables. Le nom de table ne sert à rien, il n'est d'ailleurs jamais défini pour aucune des entrées, il est possible que ce soit un reste d'une ancienne version du protocole où les deux noms étaient distinct.\\
+
+Une fois les classinfos lues. Nous allons pouvoir passez au décodage des entités, cependant avant de pouvoir le faire il va falloir définir les propriétés des entités essentielles (celles qui étaient dans le String Table "instancebaseline"). \\
+Pour ce faire nous allons parcourir les valeur (champ $value$) de chacune des entrées de cette table et les décoder comme propriétés de cette entité, bien que l'entité à proprement parler n'existe pas encore.
+
+\subsubsection{Propriétés}
+
+La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, une flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman. 
 
 \subsubsection{PacketEntities}
 
@@ -230,5 +247,6 @@ Les données intégrées de type svc\_PacketEntities forment le coeur du fichier
 Voici la structure de ce type de message:
 \inputminted[breaklines,breaksymbol=, frame=single,label=Entities, stepnumber=1,tabsize=2]{Protobuf}{entities.proto}
 
+Les données sur l'entité sont contenue dans le champ $entity\_data$ qui est de type bytes, il va donc falloir décoder de manière particulière ces données. 
 
 \end{document}
