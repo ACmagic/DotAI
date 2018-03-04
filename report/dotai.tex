@@ -239,7 +239,10 @@ Pour ce faire nous allons parcourir les valeur (champ $value$) de chacune des en
 
 \subsubsection{Propriétés}
 
-La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, une flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman. 
+La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, une flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman contenant différentes opérations possible pour remplire les propriétés d'une entité.\\ 
+Ainsi il faut se placer à la racine de l'arbre, puis, tant que la lecture n'est pas finie (tant que nous ne somme pas tombé sur une feuille contenant l'operation $FieldPathEncodeFinish$) alors si le prochain bit du flux est égal à 1, aller à l'enfant de droite, sinon à l'enfant de gauche.\\
+Quand nous tombons sur une feuille, il faut exécuter l'opération de la feuille puis ajouter le champ à la liste des champ à décoder.\\
+Une fois la liste des champs complète nous pouvons les décoder grâce aux sérialiseurs que nous avons trouvés plus tôt dans les send tables.
 
 \subsubsection{PacketEntities}
 
@@ -248,5 +251,7 @@ Voici la structure de ce type de message:
 \inputminted[breaklines,breaksymbol=, frame=single,label=Entities, stepnumber=1,tabsize=2]{Protobuf}{entities.proto}
 
 Les données sur l'entité sont contenue dans le champ $entity\_data$ qui est de type bytes, il va donc falloir décoder de manière particulière ces données. 
+
+\subsection{Implémentation}
 
 \end{document}
