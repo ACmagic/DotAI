@@ -38,6 +38,8 @@ Chaque équipe commence dans un coin de la carte (en bas à gauche et en haut à
 
 En plus des héros chaque base va périodiquement créer des "creeps", sortes de petit monstres qui vont se déplacer sur une lane.
 
+\includegraphics[scale=0.3]{"dota2screen.png"} 
+
 \section{Recupération des informations d'OpenDota}
 
 Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match.\\
@@ -103,7 +105,7 @@ Comme on peut le constater un packet n'est en vérité que composé de numéros 
 	\end{tabular}
 \end{center}
 
-Ce qu'il faut remarqué c'est que l'ID est encodé en tant que "bitvar" et non pas en tant que VarInt. Ce format est un petit peu particulier et implique un désalignement:
+Ce qu'il faut remarqué c'est que l'ID est encodé en tant que "BitVar" et non pas en tant que VarInt. Ce format est un petit peu particulier et implique un désalignement:
 
 \begin{verbatim}
 Byte No: |       0       ||       1       ||       2       ||       3       ||      4  //
@@ -240,6 +242,9 @@ Pour ce faire nous allons parcourir les valeur (champ $value$) de chacune des en
 \subsubsection{Propriétés}
 
 La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, une flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman contenant différentes opérations possible pour remplire les propriétés d'une entité.\\ 
+
+
+
 Ainsi il faut se placer à la racine de l'arbre, puis, tant que la lecture n'est pas finie (tant que nous ne somme pas tombé sur une feuille contenant l'operation $FieldPathEncodeFinish$) alors si le prochain bit du flux est égal à 1, aller à l'enfant de droite, sinon à l'enfant de gauche.\\
 Quand nous tombons sur une feuille, il faut exécuter l'opération de la feuille puis ajouter le champ à la liste des champ à décoder.\\
 Une fois la liste des champs complète nous pouvons les décoder grâce aux sérialiseurs que nous avons trouvés plus tôt dans les send tables.
@@ -250,7 +255,26 @@ Les données intégrées de type svc\_PacketEntities forment le coeur du fichier
 Voici la structure de ce type de message:
 \inputminted[breaklines,breaksymbol=, frame=single,label=Entities, stepnumber=1,tabsize=2]{Protobuf}{entities.proto}
 
-Les données sur l'entité sont contenue dans le champ $entity\_data$ qui est de type bytes, il va donc falloir décoder de manière particulière ces données. 
+Les données sur l'entité sont contenue dans le champ $entity\_data$ qui est de type bytes, il va donc falloir décoder de la manière suivante:\\
+
+D'abord, lire l'identifiant de l'entité (numéro unique qui permet de l'identifier parmis toutes les entités existantes) encodé sur un BitVar, le valeur que nous lisons est en réalité un delta qui permet de passer du dernier identifiant vers le prochain: $next = last + delta + 1$. Ensuite, 2 bits, appelons les x et y, qui vont déterminer l'opération à effectuer: création (x = 0 ; y = 1), mise à jour (x = 0 ; y = 0), suppression (x = 1 ; y = 1) où retrait (x = 1 ; y = 0).\\
+
+Dans le cas de la création, il faut:
+\begin{enumerate}
+\item Lire 10 bits pour trouver l'identifiant du type de l'entité, grâce auquel nous pouvons retrouver le type de l'entité et son serialiseur.
+\item Lire 17 bits pour connaitre le numéro de serie de l'entité (pas utile dans notre cas)
+\item Sauter 32 bits, leurs utilité ne m'est pas connue jusqu'à présent
+\item Lire les propriétés de l'entité comme décrit précédement
+\item Ajouter l'entité à notre liste d'entité
+\end{enumerate}
+\bigskip 
+Dans le cas de la mise à jour, il faut:
+\begin{enumerate}
+\item Lire les propriétés de l'entité
+\item Mettre à jour l'entité avec les nouvelles valeurs
+\end{enumerate}
+\bigskip 
+Dans le cas de la suppression il suffit de supprimer l'entité de notre liste et dans le cas du retrait il n'y a rien à faire de particulier. 
 
 \subsection{Implémentation}
 
