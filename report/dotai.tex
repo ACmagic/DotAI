@@ -43,7 +43,7 @@ En plus des héros chaque base va périodiquement créer des "creeps", sortes de
 \section{Recupération des informations d'OpenDota}
 
 Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match.\\
-Dans un premier temps M. Malaspinas et moi-même pensions que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
+Dans un premier temps je pensais que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
 
 \subsection{Implémentation}
 
@@ -51,7 +51,8 @@ Le programme BountyHunter écrit en python va permettre de télécharger une sé
 
 \section{Analyse des fichiers .dem}
 
-Les fichiers .dem sont des fichiers contenant toutes les informations dont on pourrait vouloir sur une partie allant de entités présentes sur la carte jusqu'au commentaires audio si disponnibles. Un fichier .dem pour une partie standard ({\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}30 Minutes) pèse {\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}50Mo.
+Les fichiers .dem sont des fichiers contenant toutes les informations dont on pourrait vouloir sur une partie allant de entités présentes sur la carte jusqu'au commentaires audio si disponnibles. Un fichier .dem pour une partie standard ({\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}30 Minutes) pèse {\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}50Mo.\\
+Comme vous pourrez le voir dans le suite de ce document, ce format est extrêmement complexe et par moment on peut être tenté de se demander pourquoi aller chercher aussi loin pour l'encodage de certaines données, cependant il est important pour la comprehension globale du format 
 
 \subsection{Format}
 
@@ -233,7 +234,7 @@ La manière de décoder chaque type est définie dans la classe $Decoders$ du pr
 
 \subsubsection{ClassInfos}
 
-Les classinfos sont une information essentielle au décodage du fichier, en effet chaque fois qu'une entité est réferencée, au lieu de l'obtenir par son nom qui peut être très long comme "CDOTA\_Ability\_Alchemist\_UnstableConcoctionThrow" (48 bytes - 384 bits) le fichier va se servir d'un indentifiant de type nombre entier contenu entre 0 et 754 pour les fichiers récents donc seulement 10 bits (donc un gain de 374 bits à chaque référence de "CDOTA\_Ability\_Alchemist\_UnstableConcoctionThrow").\\
+Les classinfos sont une information essentielle au décodage du fichier, en effet chaque fois qu'une entité est réferencée, au lieu de l'obtenir par son nom qui peut être très long comme \\"CDOTA\_Ability\_Alchemist\_UnstableConcoctionThrow" (48 bytes - 384 bits) le fichier va se servir d'un indentifiant de type nombre entier contenu entre 0 et 754 pour les fichiers récents donc seulement 10 bits (donc un gain de 374 bits à chaque référence de "CDOTA\_Ability\_Alchemist\_UnstableConcoctionThrow").\\
 
 Voici le format de ce message:
 \inputminted[breaklines,breaksymbol=, frame=single,label=ClassInfos, stepnumber=1,tabsize=2]{Protobuf}{classinfo.proto}
@@ -288,11 +289,16 @@ Les implémentations concrètes de certaines classes sont disponnibles en annexe
 
 \subsubsection{Arbre d'Huffman}
 
-L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas (heap). Java ne présente pas directement de structure de tas mais la $PriorityQueue$ est en vériter triée grâce un tas. Nous pouvons donc insérer dans la queue qui est triée selon le poids de l'opération, puis nous fusionnons 
+L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas (heap). Java ne présente pas directement de structure de tas mais la $PriorityQueue$ est en vériter triée grâce un tas. Nous pouvons donc insérer dans la queue qui est triée selon le poids de l'opération, puis nous fusionnons les deux noeuds les plus haut dans un seul noeud (avec 2 enfants) jusqu'a ce qu'il ne reste qu'un seul noeud qui est donc la racine de l'arbre.
 
 \section{Utilisation}
 
+
+
 \section{Conclusion}
+
+Ce travail c'est révelé bien plus compliqué que prévu, mais extrêmement intéressant. Je ne me serai jamais douté qu'un format puisse être aussi complexe mais c'est cette complexité qui permet d'atteindre un très haut taux de compression. En effet j'ai essayé d'exporter les données de position de chaque entités de mainière naïve en écrivant chaque position à chaque tick et j'obtiens des fichiers de plusieurs GB. L'analyse de ce format a donc été un énorme apprentissage pour moi, avec notemment la découverte de protobuf et une révision des théorie de compression vues en 1ère année.\\
+Au final j'obtiens deux programmes qui fonctionne comme prévu et peuvent constituer un premier pas vers la réalisation d'une IA capable d'apprendre à jouer à DotA2 comme un humain. Bien que la possibilité de créer cette IA dans le cadre d'un travail de bachelor existe, je ne compte pas le faire car bien que très interessant sur le papier la base théorique qui permetterai de réaliser ce projet n'est tout simplement pas enseignée à l'hepia.
 
 \newpage
 \section*{Annexe 1: Implémentation du flux bit-par-bit}
@@ -303,7 +309,5 @@ L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas
 \newpage
 \section*{Annexe 3: Implémentation des opérations pour l'arbre d'Huffman}
 \inputminted[breaklines,breaksymbol=, frame=single,label=FieldPathOP, stepnumber=1,tabsize=2]{java}{FieldPathOP.java}
-
-
 
 \end{document}
