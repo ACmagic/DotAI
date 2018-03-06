@@ -45,6 +45,10 @@ En plus des héros chaque base va périodiquement créer des "creeps", sortes de
 Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match.\\
 Dans un premier temps M. Malaspinas et moi-même pensions que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
 
+\subsection{Implémentation}
+
+Le programme BountyHunter écrit en python va permettre de télécharger une série de fichier .dem contenant un héros demandé en paramètre (\textit{python3 bountyhunter.py <hero>}). Le programme va séquenciellement télécharger et décompresser les fichiers afin qu'il soit utilisable pour l'analyse.
+
 \section{Analyse des fichiers .dem}
 
 Les fichiers .dem sont des fichiers contenant toutes les informations dont on pourrait vouloir sur une partie allant de entités présentes sur la carte jusqu'au commentaires audio si disponnibles. Un fichier .dem pour une partie standard ({\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}30 Minutes) pèse {\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}50Mo.
@@ -105,7 +109,7 @@ Comme on peut le constater un packet n'est en vérité que composé de numéros 
 	\end{tabular}
 \end{center}
 
-Ce qu'il faut remarqué c'est que l'ID est encodé en tant que "BitVar" et non pas en tant que VarInt. Ce format est un petit peu particulier et implique un désalignement:
+Ce qu'il faut remarqer c'est que l'ID est encodé en tant que "BitVar" et non pas en tant que VarInt. Ce format est un petit peu particulier et implique un désalignement:
 
 \begin{verbatim}
 Byte No: |       0       ||       1       ||       2       ||       3       ||      4  //
@@ -243,8 +247,6 @@ Pour ce faire nous allons parcourir les valeur (champ $value$) de chacune des en
 
 La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, une flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman contenant différentes opérations possible pour remplire les propriétés d'une entité.\\ 
 
-
-
 Ainsi il faut se placer à la racine de l'arbre, puis, tant que la lecture n'est pas finie (tant que nous ne somme pas tombé sur une feuille contenant l'operation $FieldPathEncodeFinish$) alors si le prochain bit du flux est égal à 1, aller à l'enfant de droite, sinon à l'enfant de gauche.\\
 Quand nous tombons sur une feuille, il faut exécuter l'opération de la feuille puis ajouter le champ à la liste des champ à décoder.\\
 Une fois la liste des champs complète nous pouvons les décoder grâce aux sérialiseurs que nous avons trouvés plus tôt dans les send tables.
@@ -277,5 +279,31 @@ Dans le cas de la mise à jour, il faut:
 Dans le cas de la suppression il suffit de supprimer l'entité de notre liste et dans le cas du retrait il n'y a rien à faire de particulier. 
 
 \subsection{Implémentation}
+
+L'architecture globale du programme est une architecture basée sur les évenements, en effet quand le lecteur (ReplayReader) va lire un message, alors il va l'envoyer au routeur (MessageRouter) qui va ensuite appeller la bonne méthode pour traiter le message.\\
+
+Les implémentations concrètes de certaines classes sont disponnibles en annexe.
+
+\subsubsection{Diagramme de classes}
+
+\subsubsection{Arbre d'Huffman}
+
+L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas (heap). Java ne présente pas directement de structure de tas mais la $PriorityQueue$ est en vériter triée grâce un tas. Nous pouvons donc insérer dans la queue qui est triée selon le poids de l'opération, puis nous fusionnons 
+
+\section{Utilisation}
+
+\section{Conclusion}
+
+\newpage
+\section*{Annexe 1: Implémentation du flux bit-par-bit}
+\inputminted[breaklines,breaksymbol=, frame=single,label=BitStream, stepnumber=1,tabsize=2]{java}{BitStream.java}
+\newpage
+\section*{Annexe 2: Implémentation des décodeurs}
+\inputminted[breaklines,breaksymbol=, frame=single,label=Decoders, stepnumber=1,tabsize=2]{java}{Decoders.java}
+\newpage
+\section*{Annexe 3: Implémentation des opérations pour l'arbre d'Huffman}
+\inputminted[breaklines,breaksymbol=, frame=single,label=FieldPathOP, stepnumber=1,tabsize=2]{java}{FieldPathOP.java}
+
+
 
 \end{document}

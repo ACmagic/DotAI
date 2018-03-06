@@ -2,7 +2,8 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {subsection}{\numberline {1.1}DotA 2}{3}{subsection.1.1}
 \contentsline {section}{\numberline {2}Recupération des informations d'OpenDota}{4}{section.2}
-\contentsline {section}{\numberline {3}Analyse des fichiers .dem}{4}{section.3}
+\contentsline {subsection}{\numberline {2.1}Implémentation}{4}{subsection.2.1}
+\contentsline {section}{\numberline {3}Analyse des fichiers .dem}{5}{section.3}
 \contentsline {subsection}{\numberline {3.1}Format}{5}{subsection.3.1}
 \contentsline {subsubsection}{\numberline {3.1.1}Format global}{5}{subsubsection.3.1.1}
 \contentsline {subsubsection}{\numberline {3.1.2}Données intégrées}{6}{subsubsection.3.1.2}
@@ -13,3 +14,7 @@
 \contentsline {subsubsection}{\numberline {3.2.4}Propriétés}{14}{subsubsection.3.2.4}
 \contentsline {subsubsection}{\numberline {3.2.5}PacketEntities}{14}{subsubsection.3.2.5}
 \contentsline {subsection}{\numberline {3.3}Implémentation}{15}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Diagramme de classes}{15}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Arbre d'Huffman}{15}{subsubsection.3.3.2}
+\contentsline {section}{\numberline {4}Utilisation}{16}{section.4}
+\contentsline {section}{\numberline {5}Conclusion}{16}{section.5}
