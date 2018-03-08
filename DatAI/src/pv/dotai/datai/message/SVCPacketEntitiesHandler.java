@@ -57,10 +57,8 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 					Entity ce = new Entity(idx, classID, serial, property, classBaseline, className, flatTable);
 					
 					ReplayBuilder.getInstance().getEntities().put(idx	, ce);
-					System.out.println("Entity "+ce.getClassName()+" created ("+idx+")" + ce.getClassID());					
 					break;
 				case DELETE:
-					System.out.println("Entity "+ReplayBuilder.getInstance().getEntities().get(idx).getClassName()+" deleted ("+idx+")");
 					ReplayBuilder.getInstance().getEntities().remove(idx);
 					break;
 				case LEAVE:
@@ -71,7 +69,6 @@ public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEn
 						throw new ReplayException("Unable to find entity " + idx + " for update !");
 					}
 					ue.getProperty().readProperties(bs, ue.getFlatTable());
-					System.out.println("Entity "+ue.getClassName()+" updated ("+idx+")");
 					break;
 			}
 		}

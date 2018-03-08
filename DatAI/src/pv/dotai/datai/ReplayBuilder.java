@@ -1,10 +1,11 @@
 package pv.dotai.datai;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import pv.dotai.datai.io.Writer;
 import pv.dotai.datai.message.datast.DataTable;
 import pv.dotai.datai.message.datast.Property;
 import pv.dotai.datai.message.datast.StringTable;
@@ -22,24 +23,30 @@ public class ReplayBuilder {
 	private final Map<Integer, String> classInfo;
 	private Map<String, Map<Integer, DataTable>> serializers;
 	private final Map<Integer, Property> classBaseline;
+	private final List<ReplayListener> listeners;
 	private boolean classInfoComplete = false;
 	private final StringTables stringTables;
-	private final Writer writer;
 	
 	public ReplayBuilder() {
 		this.entities = new HashMap<>();
 		this.classInfo = new HashMap<>();
 		this.stringTables = new StringTables();
 		this.classBaseline = new HashMap<>();
-		this.writer = new Writer();
+		this.listeners = new ArrayList<>();
+	}
+	
+	public void registerListener(ReplayListener listener) {
+		listeners.add(listener);
 	}
 	
 	public void snapshot(int tick) {
-		writer.write(tick);
+		for (ReplayListener replayListener : listeners) {
+			replayListener.update(tick, new ArrayList<>(entities.values()));
+		}
 	}
 	
 	public void finish() {
-		writer.finish();
+		
 	}
 	
 	public void updateInstanceBaseline() {
@@ -120,5 +127,9 @@ public class ReplayBuilder {
 
 	public Map<Integer, Entity> getEntities() {
 		return entities;
+	}
+
+	public List<ReplayListener> getListeners() {
+		return listeners;
 	}
 }

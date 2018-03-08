@@ -23,6 +23,20 @@ public class Entity {
 		this.flatTable = flatTable;
 	}
 	
+	public double getWorldX() {
+		long cellX = (long) this.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_cellX");
+		float vecX = (float) this.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_vecX");
+		
+		return cellX * 128.0f + vecX;
+	}
+	
+	public double getWorldY() {
+		long cellY = (long) this.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_cellY");
+		float vecY = (float) this.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_vecY");
+		
+		return cellY * -128.0f - vecY + 32768.0f;
+	}
+	
 	public Object fetchProperty(String key) {
 		if(property.getKV().get(key) != null) {
 			return property.getKV().get(key);
