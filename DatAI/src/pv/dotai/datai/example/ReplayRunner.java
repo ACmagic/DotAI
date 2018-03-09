@@ -42,11 +42,11 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 	}
 
 	public int getMapX(Entity e) {
-		return (int) ((e.getWorldX() - 16384) / 15000 * 720);
+		return (int) ((e.getWorldX() / 32768.0) * 720.0 * 2) - 360;
 	}
 
 	public int getMapY(Entity e) {
-		return (int) ((e.getWorldY() - 16384) / 15000 * 720);
+		return (int) ((e.getWorldY() / 32768.0) * 720.0 * 2) - 360;
 	}
 
 	class DrawPane extends JPanel {
