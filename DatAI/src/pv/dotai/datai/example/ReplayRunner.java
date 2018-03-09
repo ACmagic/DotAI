@@ -3,6 +3,7 @@ package pv.dotai.datai.example;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
@@ -67,11 +68,32 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 				return;
 			for (Entity entity : entities) {
 				String name = entity.getClassName();
+				if(name.startsWith("CDOTA_Unit_Announcer")) continue;
 				if (entity.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_cellX") != null) {
-					g.setColor(Color.red);
-					g.fillArc(getMapX(entity), getMapY(entity), 10, 10, 0, 360);
+					if(name.startsWith("CDOTA_Unit_Hero_")) {
+						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
+						g.fillArc(getMapX(entity) - 6, getMapY(entity) - 6, 12, 12, 0, 360);
+						g.setColor(color(name));
+						g.fillArc(getMapX(entity) - 5, getMapY(entity)- 5, 10, 10, 0, 360);
+					} else if(name.equals("CDOTA_BaseNPC_Creep_Lane") || name.equals("CDOTA_BaseNPC_Creep_Siege")) {
+						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
+						g.fillArc(getMapX(entity), getMapY(entity), 6, 6, 0, 360);
+					} else if(name.equals("CDOTA_BaseNPC_Creep_Neutral")) {
+						g.setColor(Color.cyan);
+						g.fillArc(getMapX(entity), getMapY(entity), 8, 8, 0, 360);
+					} else if(name.equals("CDOTA_BaseNPC_Tower") || name.equals("CDOTA_BaseNPC_Barracks")) {
+						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
+						g.fillRect(getMapX(entity), getMapY(entity), 8, 8);
+					} else if(name.equals("CDOTA_BaseNPC_Fort")) {
+						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
+						g.fillPolygon(new int[] {getMapX(entity) - 8, getMapX(entity), getMapX(entity) + 8}, new int[] {getMapY(entity), getMapY(entity) - 16, getMapY(entity)}, 3);					
+					}
 				}
 			}
+		}
+		
+		public Color color(String name) {
+			return new Color(name.length() * 10 % 255, Math.abs(name.hashCode()) % 255, name.charAt(name.length()-1) * 20 % 255);
 		}
 	}
 
