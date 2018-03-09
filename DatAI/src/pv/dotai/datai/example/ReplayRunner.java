@@ -3,7 +3,8 @@ package pv.dotai.datai.example;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Polygon;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
@@ -21,6 +22,7 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 	private Collection<Entity> entities;
 	private final int WIDTH = 720;
 	private final int HEIGHT = 720;
+	private final int OFFSET = 40;
 
 	public ReplayRunner() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +30,7 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 		contentPane = new DrawPane();
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		setBackground(Color.black);
 	}
 
 	@Override
@@ -57,13 +60,18 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 		public DrawPane() {
 			try {
 				this.bg = ImageIO.read(getClass().getResource("minimap.jpg"));
+				setBackground(Color.black);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		public void paint(Graphics g) {
-			g.drawImage(bg, 0, 0, 720, 720, null);
+		public void paint(Graphics g1) {
+			
+			Graphics2D g = (Graphics2D)g1.create();
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+			g.drawImage(bg, OFFSET, OFFSET, 720 - OFFSET * 2, 720 - OFFSET * 2, null);
 			if (entities == null)
 				return;
 			for (Entity entity : entities) {
@@ -72,9 +80,13 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 				if (entity.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_cellX") != null) {
 					if(name.startsWith("CDOTA_Unit_Hero_")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
-						g.fillArc(getMapX(entity) - 6, getMapY(entity) - 6, 12, 12, 0, 360);
-						g.setColor(color(name));
-						g.fillArc(getMapX(entity) - 5, getMapY(entity)- 5, 10, 10, 0, 360);
+						if((int)entity.fetchProperty("m_iHealth") > 0) {
+        						g.fillArc(getMapX(entity) - 6, getMapY(entity) - 6, 12, 12, 0, 360);
+        						g.setColor(color(name));
+        						g.fillArc(getMapX(entity) - 5, getMapY(entity)- 5, 10, 10, 0, 360);
+						} else {
+							g.drawChars(new char[] {'X'}, 0, 1, getMapX(entity) - 5, getMapY(entity) - 5);
+						}
 					} else if(name.equals("CDOTA_BaseNPC_Creep_Lane") || name.equals("CDOTA_BaseNPC_Creep_Siege")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
 						g.fillArc(getMapX(entity) - 3, getMapY(entity) - 3, 6, 6, 0, 360);
