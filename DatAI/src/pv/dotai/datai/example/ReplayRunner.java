@@ -36,7 +36,7 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 		this.setTitle("Tick: " + tick);
 		contentPane.repaint();
 		try {
-			Thread.sleep(4);
+			Thread.sleep(2);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -77,16 +77,16 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 						g.fillArc(getMapX(entity) - 5, getMapY(entity)- 5, 10, 10, 0, 360);
 					} else if(name.equals("CDOTA_BaseNPC_Creep_Lane") || name.equals("CDOTA_BaseNPC_Creep_Siege")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
-						g.fillArc(getMapX(entity), getMapY(entity), 6, 6, 0, 360);
+						g.fillArc(getMapX(entity) - 3, getMapY(entity) - 3, 6, 6, 0, 360);
 					} else if(name.equals("CDOTA_BaseNPC_Creep_Neutral")) {
 						g.setColor(Color.cyan);
-						g.fillArc(getMapX(entity), getMapY(entity), 8, 8, 0, 360);
+						g.fillArc(getMapX(entity) - 4, getMapY(entity) - 4, 8, 8, 0, 360);
 					} else if(name.equals("CDOTA_BaseNPC_Tower") || name.equals("CDOTA_BaseNPC_Barracks")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
-						g.fillRect(getMapX(entity), getMapY(entity), 8, 8);
+						g.fillRect(getMapX(entity) - 4, getMapY(entity) - 4, 8, 8);
 					} else if(name.equals("CDOTA_BaseNPC_Fort")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
-						g.fillPolygon(new int[] {getMapX(entity) - 8, getMapX(entity), getMapX(entity) + 8}, new int[] {getMapY(entity), getMapY(entity) - 16, getMapY(entity)}, 3);					
+						g.fillPolygon(new int[] {getMapX(entity) - 8, getMapX(entity), getMapX(entity) + 8}, new int[] {getMapY(entity) + 8, getMapY(entity) - 8, getMapY(entity) + 8}, 3);					
 					}
 				}
 			}
