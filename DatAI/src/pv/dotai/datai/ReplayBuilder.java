@@ -35,6 +35,10 @@ public class ReplayBuilder {
 		this.listeners = new ArrayList<>();
 	}
 	
+	/**
+	 * Adds a listener to be notified when the game state's changes
+	 * @param listener listener to add
+	 */
 	public void registerListener(ReplayListener listener) {
 		listeners.add(listener);
 	}

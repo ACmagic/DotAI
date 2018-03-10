@@ -29,39 +29,40 @@ Le but de ce projet de semestre est de créer un ensemble de logiciels permettan
 
 \subsection{DotA 2}
 
-DotA 2 est jeu-vidéo multijoueur de type bataille en arène (MOBA) où 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs chacun controllant un héro choisi parmis les héros disponnibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). A l'heure actuelle le jeu propose 115 héros, chacuns disposant de 5 attaques différentes. La partie se déroule sur une carte symétrique constituté de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
+DotA 2 est un jeu-vidéo multijoueur de type bataille en arène (MOBA) dans lequel 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs, chacun controllant un héros choisi parmis les héros disponibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). A l'heure actuelle, le jeu propose 115 héros chacun disposant de 5 attaques différentes. La partie se déroule sur une carte symétrique constituée de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
 \begin{center}
 	\includegraphics[scale=1]{"minimap.png"} 
 \end{center}
 
-Chaque équipe commence dans un coin de la carte (en bas à gauche et en haut à droite), le but pour chaque héros est de controler une partie de la carte et détruire les tours ennemies (T) afin d'arriver jusqu'a la base adverse (A) et de la détruire.\\
+Chaque équipe débute une partie dans un coin de la carte (en bas à gauche et en haut à droite). Le but pour chaque héros est de contrôler une partie du territoire, d'anéantir les tours ennemies (T) jusqu'à arriver à la base adverse (A) et la détruire.\\
 
 En plus des héros chaque base va périodiquement créer des "creeps", sortes de petit monstres qui vont se déplacer sur une lane.
-
-\includegraphics[scale=0.3]{"dota2screen.png"} 
+\begin{center}
+	\includegraphics[scale=0.25]{"dota2screen.png"} 
+\end{center}
 
 \section{Recupération des informations d'OpenDota}
 
-Opendota collecte une quantitée énorme de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisable est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de se projet, nous allons utiliser un filtre permettant de séléctionner un héros dont on voudrait qu'il soit présent dans le match.\\
-Dans un premier temps je pensais que les données étaient directement exploitable depuis opendota, malheureusement c'est plus compliqué. En effet OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Après une petite discussion avec le créateur du site, il a expliqué que le volume de données serait bien trop important. Heureusement le résultat contient un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
+Opendota collecte une quantité très importante de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisables est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de ce projet, nous allons utiliser un filtre permettant de séléctionner un héros que l'on veut avoir dans le match.\\
+Dans un premier temps, je pensais que les données seraient directement exploitables depuis opendota, malheureusement c'est plus compliqué. En effet, OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Lors d'une petite discussion avec le créateur du site, il a expliqué que le volume de données serait bien trop important. Heureusement le résultat propose un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
 
 \subsection{Implémentation}
 
-Le programme BountyHunter écrit en python va permettre de télécharger une série de fichier .dem contenant un héros demandé en paramètre (\textit{python3 bountyhunter.py <hero>}). Le programme va séquenciellement télécharger et décompresser les fichiers afin qu'il soit utilisable pour l'analyse.
+Le programme BountyHunter écrit en python va permettre de télécharger une série de fichiers .dem contenant un héros demandé en paramètre (\textit{python3 bountyhunter.py <hero>}). Le programme va séquentiellement télécharger et décompresser les fichiers afin qu'ils soient utilisables pour l'analyse.
 
 \section{Analyse des fichiers .dem}
 
-Les fichiers .dem sont des fichiers contenant toutes les informations dont on pourrait vouloir sur une partie allant des entités présentes sur la carte jusqu'au commentaires audio si disponnibles. Un fichier .dem pour une partie standard ({\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}30 Minutes) pèse {\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}50Mo.\\
-Comme vous pourrez le voir dans le suite de ce document, ce format est extrêmement complexe et par moment on peut être tenté de se demander pourquoi aller chercher aussi loin pour l'encodage de certaines données, cependant il est important pour la comprehension globale du format de toujours garder à l'esprit un mot: \textbf{la compression}.\\
- En effet tout ce qui concerne ce format peut être expliqué par l'envie des développeurs du jeu de vouloir minimiser la taille de chaque fichier étant donné qu'ils les hébergent toutes les parties joués à travers le monde. 
+Les fichiers .dem sont des fichiers contenant toutes les informations dont on pourrait vouloir sur une partie allant des entités présentes sur la carte jusqu'au commentaires audio si disponibles. Un fichier .dem pour une partie standard ({\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}30 Minutes) pèse {\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}50Mo.\\
+Comme vous pourrez le voir dans le suite de ce document, ce format est extrêmement complexe et par moment on peut être tenté de se demander pourquoi aller chercher aussi loin pour l'encodage de certaines données, cependant il est important pour la compréhension globale du format de toujours garder à l'esprit un mot: \textbf{la compression}.\\
+En effet tout ce qui concerne ce format peut être expliqué par le besoin des développeurs du jeu de minimiser la taille de chaque fichier étant donné qu'il faut héberger toutes les parties jouées à travers le monde. 
 
 \subsection{Format}
 
-Le format global de ces fichiers est assez simple. DotA 2 utilise protobuf, une technologie de sérialization développée par google, pour encoder ces fichiers. Le protocole du jeu est maintenu à jour par l'équipe SteamRE sur \url{https://github.com/SteamRE/SteamKit/tree/master/Resources/Protobufs/dota} \\
+Le format global de ces fichiers est assez simple. DotA 2 utilise protobuf, une technologie de sérialisation développée par google, pour encoder ces fichiers. Le protocole du jeu est maintenu à jour par l'équipe SteamRE sur \url{https://github.com/SteamRE/SteamKit/tree/master/Resources/Protobufs/dota} \\
 
 \subsubsection{En-tête}
-Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2. Soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay datant d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
-Une fois cette chaine de caractères lue le fichier contient 8 bytes dont l'utilitée n'est pas connue.\\
+Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2, soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay datant d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
+Une fois cette chaîne de caractères lue, le fichier contient 8 bytes dont l'utilité n'est pas connue.\\
 
 \subsubsection{Corps}
 
@@ -81,12 +82,12 @@ La suite du fichier est une série d'entrées de ce type:\\
 
 Note: Les varints sont des entiers encodés sur une longeur variable de bits. Cet encocodage est détaillé sur \url{https://developers.google.com/protocol-buffers/docs/encoding#varints} \\
 
-L'ID va indiquer le type du message parmis la liste définie dans le protocole:
+L'ID va indiquer le type du message parmi la liste définie dans le protocole:
 \inputminted[breaklines,breaksymbol=, frame=single,label=Messages, stepnumber=1,tabsize=2]{Protobuf}{messages.proto}
 
-La seule exception est \textit{DEM\_IsCompressed} qui n'est pas un type de message mais qui défini un bit (6ème bit) qui, s'il est égal à 1, alors le message doit être décompressé via la bibliothèque snappy avant d'être interpreté.\\
+La seule exception est \textit{DEM\_IsCompressed} qui n'est pas un type de message mais qui définit un bit (6ème bit) qui, s'il est égal à 1, alors le message doit être décompressé via la bibliothèque snappy avant d'être interpreté.\\
 
-Le Tick va définir le moment dans la partie ou le message arrive. \\
+Le Tick va définir le moment dans la partie où le message est arrivé. \\
 
 Le champ Taille indique la taille en bytes des données de ce message.\\
 
@@ -97,9 +98,9 @@ Une fois ces informations connues nous pouvons lancer le décodage via protobuf 
 Les données intégrées sont basiquement un message encodé dans un autre message. Dans notre cas un DEM\_Packet et un DEM\_FullPacket sont définis comme: 
 \inputminted[breaklines,breaksymbol=, frame=single,label=Packets, stepnumber=1,tabsize=2]{Protobuf}{dem_packet.proto}
 Les DEM\_SignonPacket n'ont pas de définition distincte, leur structure est la même qu'un DEM\_Packet.
-Les DEM\_FullPacket sont en fait composés d'une \textit{StringTable} et d'un DEM\_Packet qu'il faudra interprêter comme les autres DEM\_Packet.\\
+Les DEM\_FullPacket sont en fait composés d'une \textit{StringTable} et d'un DEM\_Packet qu'il faudra interpréter comme les autres DEM\_Packet.\\
 
-Comme on peut le constater un packet n'est en vérité que composé de numéros de séquences (qui ne sont pas intéressants dans notre cas) et d'une suite de bytes qu'il nous faut interprêter. L'intérprétation de ce champ est la suivante: Il s'agit d'une série de sous-messages dont encodés d'une manière ressemblant au format global du fichier:
+Comme on peut le constater un paquet n'est en vérité composé que de numéros de séquences (qui ne sont pas intéressants dans notre cas) et d'une suite de bytes qu'il nous faut interpréter. L'interprétation de ce champ est la suivante: il s'agit d'une série de sous-messages encodés d'une manière ressemblant au format global du fichier:
 
 \begin{center}
 	\begin{tabular}{| l | l |}
@@ -129,17 +130,17 @@ Les bits "X", "Y" et "0" doivent obligatoirement être lus. Ensuite:
 \item Si X et Y valent 1, il faut lire 28 bits supplémentaires (les bits "1", "2" et "3")
 \end{itemize}
 \vspace*{\baselineskip}
-Note: Comme on peut le constater, la lecture de cette variable ne s'arrête non pas à la fin d'un byte mais bel et bien au millieu. Nous ne sommes donc plus alignés sur une base de 8 bits ce qui oblige à créer un flux de lecture bit par bit au lieu d'utiliser un des flux disponnibles avec java qui sont tous byte par byte.
+Note: Comme on peut le constater, la lecture de cette variable ne s'arrête non pas à la fin d'un byte mais bel et bien au millieu. Nous ne sommes donc plus alignés sur une base de 8 bits ce qui oblige à créer un flux de lecture bit par bit au lieu d'utiliser un des flux disponibles avec java qui sont tous byte par byte.
 \vspace*{\baselineskip}\\
-La valeur est ensuite construite de la manière suivante: Les 4 bits "0" sont les bits de poids faible, les autres bits restent dans l'ordre dans lequel ils sont écrits (les "1" en poids fort).\\
+La valeur est ensuite construite de la manière suivante: les 4 bits "0" sont les bits de poids faible, les autres bits restent dans l'ordre dans lequel ils sont écrits (les "1" en poids fort).\\
 
-Le champs taille défini la taille des données de ce sous-packet. Les données sont à nouveau une structure encodée via protobuf, cette structure peut être de type NET\_Message ou SVC\_Message (également d'autres types possible mais ils ne nous intéressent pas). \\
+Le champs taille définit la taille des données de ce sous-packet. Les données sont à nouveau une structure encodée via protobuf, cette structure peut être de type NET\_Message ou SVC\_Message (également d'autres types possibles mais ils ne nous intéressent pas). \\
 
 Voici les enums SVC\_Messages et NET\_Messages:
 
 \inputminted[breaklines,breaksymbol=, frame=single,label=Messages, stepnumber=1,tabsize=2]{Protobuf}{netmessages.proto}
 
-Dans ce projet, étant donné que nous ne cherchons pas à créer un interpreteur complet, ce sont les messages svc\_CreateStringTable, svc\_UpdateStringTable, svc\_PacketEntities et svc\_ServerInfo qui vont nous intéresser par le suite. 
+Dans ce projet, étant donné que nous ne cherchons pas à créer un interpréteur complet, ce sont les messages svc\_CreateStringTable, svc\_UpdateStringTable, svc\_PacketEntities et svc\_ServerInfo qui vont nous intéresser par la suite. 
 
 \subsection{Données}
 
@@ -159,13 +160,13 @@ addons: ""
 Ces informations ne nous sont cependant pas utiles.\\
 Nous trouvons ensuite une série de DEM\_SignonPacket, l'un d'entre eux contient un sous-message de type svc\_ServerInfo dont voici la structure:
 \inputminted[breaklines,breaksymbol=, frame=single,label=ServerInfo, stepnumber=1,tabsize=2]{Protobuf}{serverinfo.proto}
-Le champ game\_dir va nous permettre de déterminer la version de DotA 2 utilisée, ce qui nous sera utile par la suite. Le contenu du champ ressemble à ça "/opt/srcds/dota/dota\_v2432/dota" (à noter que ce champ est également présent dans le message DEM\_FileHeader). La partie qui nous interesse est "v2432" qui nous indique que le replay à été créer avec la version 2432 de DotA 2.\\
+Le champ game\_dir va nous permettre de déterminer la version de DotA 2 utilisée, ce qui nous sera utile par la suite. Le contenu du champ ressemble à ça "/opt/srcds/dota/dota\_v2432/dota" (à noter que ce champ est également présent dans le message DEM\_FileHeader). La partie qui nous intéresse est "v2432". Elle nous indique que le replay a été créé avec la version 2432 de DotA 2.\\
 
 Nous trouvons ensuite des DEM\_Packets qui contiennent des sous-messages de type svc\_CreateStringTable qui vont servir, comme leur nom l'indique à créer des "String Tables".
 
 \subsubsection{String Tables}
 
-Une String Table est une table nomée, composée d'une série d'entrées ayant un index (entier), une clef (chaine de caractères) et une valeur (chaine de bytes) bien que le clef comme la valeur puisse ne pas être définie (null). Voici pour illustrer une petite partie de la String Table "EntityNames" (la table entière contient 251 entrées)
+Une String Table est une table nommée, composée d'une série d'entrées ayant un index (entier), une clef (chaîne de caractères) et une valeur (chaîne de bytes) bien que la clef ou la valeur puissent ne pas être définies (null). Voici à titre d'illustration une petite partie de la String Table "EntityNames" (la table entière contient 251 entrées)
 \begin{center}
 	\begin{tabular}{| l | l | l |}
   	 \hline
@@ -178,10 +179,10 @@ Une String Table est une table nomée, composée d'une série d'entrées ayant u
 	\end{tabular}
 \end{center}
 
-Cependant, pour ce projet la seule table qui va nous intéresser est la table "instancebaseline" qui contient les identifiants de toutes les entités qui ont des propriétés à lire avant leur création.\\
+Pour ce projet la seule table qui nous intéresse est la table "instancebaseline". Elle contient les identifiants de toutes les entités qui ont des propriétés à lire avant leur création.\\
 
 La totalité du contenu de la String Table est englobé dans le champ $StringData$, cependant il est possible que ce champ soit compressé avec la librairie Snappy pour les replay plus récents ou avec LZSS pour les plus anciens. Pour savoir quelle méthode est utilisée on peut vérifier si les 4 premiers bytes composent la chaine de caractères "LZSS".\\
-Une fois décompressé si besoin nous pouvons commencer la lecture, il nous faut dans un premier temps déclarer un buffer circulaire de 32 éléments qui va constituer un historique des clefs lues. Ensuite nous pouvons décoder selon cet algorithme:\\
+Une fois décompressé si besoin, nous pouvons commencer la lecture. Il nous faut dans un premier temps déclarer un buffer circulaire de 32 éléments qui va constituer un historique des clefs lues. Ensuite nous pouvons décoder selon cet algorithme:\\
 
 \afterpage{%
 \begin{figure}[!htbp]
@@ -201,11 +202,11 @@ Une fois toutes ces String tables lues nous allons recevoir un packet contenant 
 La définition d'une SendTable est très simple:
 \inputminted[breaklines,breaksymbol=, frame=single,label=SendTable, stepnumber=1,tabsize=2]{Protobuf}{sendtable.proto}
 Comme on peut le constater il n'y a qu'un champ $data$ qui est une suite de bytes, il va donc falloir le décoder.\\
-Heureusement le décodage du champ $data$ est simple, il faut d'abort lire un varint qui va nous indiquez une taille, puis lire cette taille (en bytes) afin d'obtenir une structure de type svc\_FlattenedSerializer
+Heureusement le décodage du champ $data$ est simple, il faut d'abord lire un varint qui va nous indiquer une taille, puis lire cette taille (en bytes) afin d'obtenir une structure de type svc\_FlattenedSerializer
 
 \inputminted[breaklines,breaksymbol=, frame=single,label=FlattenedSerializer, stepnumber=1,tabsize=2]{Protobuf}{flattened.proto}
 
-Les flattened serializers vont nous permettre de connaitre toutes les structures qui vont être lues par la suite, les champs qui les composent et leurs types respectifs. En revanche ils n'expliquent en rien la façon dont il faudra lire les différents types.\\
+Les flattened serializers vont nous permettre de connaître toutes les structures qui vont être lues par la suite, les champs qui les composent et leurs types respectifs. En revanche ils n'expliquent en rien la façon dont il faudra lire les différents types.\\
 Voici un exemple de structure (CBodyComponentBaseModelEntity) et ses champs avec leurs types.
 \begin{verbatim}
 Serializer: CBodyComponentBaseModelEntity
@@ -242,57 +243,59 @@ Les classinfos sont une information essentielle au décodage du fichier, en effe
 Voici le format de ce message:
 \inputminted[breaklines,breaksymbol=, frame=single,label=ClassInfos, stepnumber=1,tabsize=2]{Protobuf}{classinfo.proto}
 
-Il s'agit donc d'une série d'entrées contenant un indentifiant, un nom réseau et nom de table. L'identifiant est le nombre qui permettra de réferencer l'entité par la suite. Le nom réseau est le nom complet de l'entité qui permet également de la retrouver dans les StringTables. Le nom de table ne sert à rien, il n'est d'ailleurs jamais défini pour aucune des entrées, il est possible que ce soit un reste d'une ancienne version du protocole où les deux noms étaient distinct.\\
+Il s'agit donc d'une série d'entrées contenant un identifiant, un nom réseau et nom de table. L'identifiant est le nombre qui permettra de référencer l'entité par la suite. Le nom réseau est le nom complet de l'entité qui permet également de la retrouver dans les StringTables. Le nom de table ne sert à rien, il n'est d'ailleurs jamais défini pour aucune des entrées, il est possible que ce soit un reste d'une ancienne version du protocole où les deux noms étaient distincts.\\
 
-Une fois les classinfos lues. Nous allons pouvoir passez au décodage des entités, cependant avant de pouvoir le faire il va falloir définir les propriétés des entités essentielles (celles qui étaient dans le String Table "instancebaseline"). \\
-Pour ce faire nous allons parcourir les valeur (champ $value$) de chacune des entrées de cette table et les décoder comme propriétés de cette entité, bien que l'entité à proprement parler n'existe pas encore.
+Une fois les ClassInfos lues, nous allons pouvoir passez au décodage des entités. Cependant avant de pouvoir le faire il va falloir définir les propriétés des entités essentielles (celles qui étaient dans le String Table "instancebaseline"). \\
+Pour ce faire nous allons parcourir les valeurs (champ $value$) de chacune des entrées de cette table et les décoder comme propriétés de cette entité, bien que l'entité à proprement parler n'existe pas encore.
 
 \subsubsection{Propriétés}
 
-La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, une flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman contenant différentes opérations possible pour remplire les propriétés d'une entité.\\ 
+La lecture des propriétés est essentielle, mais c'est également la plus compliquée. En effet afin de lire les propriétés d'une entité, il faut 3 choses, un flux de bits (non-aligné), un serialiseur (trouvé depuis les send tables) et un arbre d'Huffman contenant différentes opérations possibles pour remplir les propriétés d'une entité.\\ 
 
-Ainsi il faut se placer à la racine de l'arbre, puis, tant que la lecture n'est pas finie (tant que nous ne somme pas tombé sur une feuille contenant l'operation $FieldPathEncodeFinish$) alors si le prochain bit du flux est égal à 1, aller à l'enfant de droite, sinon à l'enfant de gauche.\\
+Ainsi il faut se placer à la racine de l'arbre, puis, tant que la lecture n'est pas finie (tant que nous ne sommes pas tombés sur une feuille contenant l'operation $FieldPathEncodeFinish$) si le prochain bit du flux est égal à 1, aller à l'enfant de droite, sinon à l'enfant de gauche.\\
 Quand nous tombons sur une feuille, il faut exécuter l'opération de la feuille puis ajouter le champ à la liste des champ à décoder.\\
 Une fois la liste des champs complète nous pouvons les décoder grâce aux sérialiseurs que nous avons trouvés plus tôt dans les send tables.
 
 \subsubsection{PacketEntities}
 
-Les données intégrées de type svc\_PacketEntities forment le coeur du fichier. En effet dans ce format tout est une entité, du "monde" dans lequel le jeu se passe, aux héros controlés par les joueurs en passant par les équipes.\\
+Les données intégrées de type svc\_PacketEntities forment le coeur du fichier. En effet dans ce format tout est une entité, du "monde" dans lequel le jeu se passe, aux héros contrôlés par les joueurs en passant par les équipes.\\
 Voici la structure de ce type de message:
 \inputminted[breaklines,breaksymbol=, frame=single,label=Entities, stepnumber=1,tabsize=2]{Protobuf}{entities.proto}
 
-Les données sur l'entité sont contenue dans le champ $entity\_data$ qui est de type bytes, il va donc falloir décoder de la manière suivante:\\
+Les données sur l'entité sont contenues dans le champ $entity\_data$ qui est de type bytes, il va donc falloir décoder de la manière suivante:\\
 
-D'abord, lire l'identifiant de l'entité (numéro unique qui permet de l'identifier parmis toutes les entités existantes) encodé sur un BitVar, le valeur que nous lisons est en réalité un delta qui permet de passer du dernier identifiant vers le prochain: $next = last + delta + 1$. Ensuite, 2 bits, appelons les x et y, qui vont déterminer l'opération à effectuer: création (x = 0 ; y = 1), mise à jour (x = 0 ; y = 0), suppression (x = 1 ; y = 1) où retrait (x = 1 ; y = 0).\\
+En premier lieu, lire l'identifiant de l'entité (numéro unique qui permet de l'identifier parmi toutes les entités existantes) encodé sur un BitVar, le valeur que nous lisons est en réalité un delta qui permet de passer du dernier identifiant vers le prochain: $next = last + delta + 1$. Ensuite, 2 bits, appelons les x et y, qui vont déterminer l'opération à effectuer: création (x = 0 ; y = 1), mise à jour (x = 0 ; y = 0), suppression (x = 1 ; y = 1) où retrait (x = 1 ; y = 0).\\
 
 Dans le cas de la création, il faut:
 \begin{enumerate}
-\item Lire 10 bits pour trouver l'identifiant du type de l'entité, grâce auquel nous pouvons retrouver le type de l'entité et son serialiseur.
-\item Lire 17 bits pour connaitre le numéro de serie de l'entité (pas utile dans notre cas)
-\item Sauter 32 bits, leurs utilité ne m'est pas connue jusqu'à présent
-\item Lire les propriétés de l'entité comme décrit précédement
-\item Ajouter l'entité à notre liste d'entité
+\item Lire 10 bits pour trouver l'identifiant du type de l'entité grâce auquel nous pouvons retrouver le type de l'entité et son sérialiseur.
+\item Lire 17 bits pour connaître le numéro de série de l'entité (pas utile dans notre cas).
+\item Sauter 32 bits, leur utilité ne nous est pas connue jusqu'à présent.
+\item Lire les propriétés de l'entité comme décrit précédemment.
+\item Ajouter l'entité à notre liste d'entité.
 \end{enumerate}
 \bigskip 
 Dans le cas de la mise à jour, il faut:
 \begin{enumerate}
-\item Lire les propriétés de l'entité
-\item Mettre à jour l'entité avec les nouvelles valeurs
+\item Lire les propriétés de l'entité.
+\item Mettre à jour l'entité avec les nouvelles valeurs.
 \end{enumerate}
 \bigskip 
-Dans le cas de la suppression il suffit de supprimer l'entité de notre liste et dans le cas du retrait il n'y a rien à faire de particulier. 
+Dans le cas de la suppression il faut supprimer l'entité de notre liste, dans le cas du retrait il n'y a rien à faire de particulier. 
 
 \subsection{Implémentation}
 
-L'architecture globale du programme est une architecture basée sur les évenements, en effet quand le lecteur (ReplayReader) va lire un message, alors il va l'envoyer au routeur (MessageRouter) qui va ensuite appeller la bonne méthode pour traiter le message.\\
+L'architecture globale du programme est une architecture basée sur les événements. En effet quand le lecteur (ReplayReader) va lire un message, il va l'envoyer au routeur (MessageRouter) qui va ensuite appeller la bonne méthode pour traiter le message.\\
 
-Les implémentations concrètes de certaines classes sont disponnibles en annexe.
+Les implémentations concrètes de certaines classes sont disponibles en annexe.
 
 \subsubsection{Diagramme de classes}
 
+
+
 \subsubsection{Arbre d'Huffman}
 
-L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas (heap). Java ne présente pas directement de structure de tas mais la $PriorityQueue$ est en vériter triée grâce un tas. Nous pouvons donc insérer dans la queue qui est triée selon le poids de l'opération, puis nous fusionnons les deux noeuds les plus haut dans un seul noeud (avec 2 enfants) jusqu'a ce qu'il ne reste qu'un seul noeud qui est donc la racine de l'arbre.
+L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas (heap). Java ne présente pas directement de structure de tas mais la $PriorityQueue$ est en vérité triée grâce à un tas. Nous pouvons donc insérer dans la queue qui est triée selon le poids de l'opération, puis nous fusionnons les deux noeuds les plus hauts en un seul noeud (avec 2 enfants) jusqu'a ce qu'il ne reste qu'un seul noeud qui est donc la racine de l'arbre.
 
 \section{Utilisation}
 
@@ -300,8 +303,8 @@ L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas
 
 \section{Conclusion}
 
-Ce travail c'est révelé bien plus compliqué que prévu, mais extrêmement intéressant. Je ne me serai jamais douté qu'un format puisse être aussi complexe mais c'est cette complexité qui permet d'atteindre un très haut taux de compression. En effet j'ai essayé d'exporter les données de position de chaque entités de mainière naïve en écrivant chaque position à chaque tick et j'obtiens des fichiers de plusieurs GB. L'analyse de ce format a donc été un énorme apprentissage pour moi, avec notemment la découverte de protobuf et une révision des théorie de compression vues en 1ère année.\\
-Au final j'obtiens deux programmes qui fonctionne comme prévu et peuvent constituer un premier pas vers la réalisation d'une IA capable d'apprendre à jouer à DotA2 comme un humain. Bien que la possibilité de créer cette IA dans le cadre d'un travail de bachelor existe, je ne compte pas le faire car bien que très interessant sur le papier la base théorique qui permetterai de réaliser ce projet n'est tout simplement pas enseignée à l'hepia.
+Ce travail s'est révelé bien plus compliqué que prévu, mais extrêmement intéressant. Je ne me serais jamais douté qu'un format puisse être aussi complexe mais c'est cette complexité qui permet d'atteindre un très haut taux de compression. En effet j'ai essayé d'exporter les données de position de chaque entité de manière naïve en écrivant chaque position à chaque tick et j'ai obtenu des fichiers de plusieurs GB. L'analyse de ce format a donc été un énorme apprentissage pour moi, avec notemment la découverte de protobuf et une révision des théories de compression vues en 1ère année.\\
+Au final nous obtenons deux programmes qui fonctionnent comme prévu et peuvent constituer un premier pas vers la réalisation d'une IA capable d'apprendre à jouer à DotA2 comme un humain. Bien que la possibilité de créer cette IA dans le cadre d'un travail de bachelor existe, je ne compte pas le faire car même si très interessante sur le papier, la base théorique qui permettrait de réaliser ce projet n'est pas enseignée à l'hepia.
 
 \newpage
 \appendix
