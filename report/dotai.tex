@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{afterpage}
 \usepackage{minted}
+\usepackage{pdflscape}
 
 \title{DotAI - Projet de semestre}
 \author{Thomas Ibanez}
@@ -30,21 +31,28 @@ Le but de ce projet de semestre est de créer un ensemble de logiciels permettan
 \subsection{DotA 2}
 
 DotA 2 est un jeu-vidéo multijoueur de type bataille en arène (MOBA) dans lequel 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs, chacun controllant un héros choisi parmis les héros disponibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). A l'heure actuelle, le jeu propose 115 héros chacun disposant de 5 attaques différentes. La partie se déroule sur une carte symétrique constituée de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
+
+\begin{figure}[h]
 \begin{center}
 	\includegraphics[scale=1]{"minimap.png"} 
+	\caption{Vue aérienne de la carte de DotA 2}
 \end{center}
+\end{figure}	
 
 Chaque équipe débute une partie dans un coin de la carte (en bas à gauche et en haut à droite). Le but pour chaque héros est de contrôler une partie du territoire, d'anéantir les tours ennemies (T) jusqu'à arriver à la base adverse (A) et la détruire.\\
 
 En plus des héros chaque base va périodiquement créer des "creeps", sortes de petit monstres qui vont se déplacer sur une lane.
+\begin{figure}[h]
 \begin{center}
 	\includegraphics[scale=0.25]{"dota2screen.png"} 
+	\caption{Vue du joueur de DotA 2}
 \end{center}
+\end{figure}
 
 \section{Recupération des informations d'OpenDota}
 
 Opendota collecte une quantité très importante de parties de DotA 2 jouées par des joueurs du monde entier. Le site présente une API permettant la récupération de matchs selon certains critères. Une documentation sur le genre de requêtes faisables est disponible sur \url{https://docs.opendota.com/}. Dans le cadre de ce projet, nous allons utiliser un filtre permettant de séléctionner un héros que l'on veut avoir dans le match.\\
-Dans un premier temps, je pensais que les données seraient directement exploitables depuis opendota, malheureusement c'est plus compliqué. En effet, OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Lors d'une petite discussion avec le créateur du site, il a expliqué que le volume de données serait bien trop important. Heureusement le résultat propose un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
+Dans un premier temps, nous pensions que les données seraient directement exploitables depuis opendota, malheureusement c'est plus compliqué. En effet, OpenDota stocke uniquement des données statistiques sur la partie jouée mais pas les actions et positions des entités à chaque instant. Lors d'une petite discussion avec le créateur du site, il a expliqué que le volume de données serait bien trop important. Heureusement le résultat propose un lien vers un fichier \textit{.dem} qui lui contient toutes ces informations.
 
 \subsection{Implémentation}
 
@@ -63,9 +71,9 @@ Le format global de ces fichiers est assez simple. DotA 2 utilise protobuf, une 
 \subsubsection{En-tête}
 Chaque fichier commence par une en-tête, soit "PBDEMS2" pour les replay datant d'après la mise à jour de DotA sur le moteur de jeu Source 2, soit "PBUFDEM" pour les replay plus anciens. Dans le cadre de ce projet nous nous concentrons uniquement sur les replay datant d'après Source 2 car ce sont ceux qui sont émis en ce moment.\\
 Une fois cette chaîne de caractères lue, le fichier contient 8 bytes dont l'utilité n'est pas connue.\\
+\newpage
 
 \subsubsection{Corps}
-
 La suite du fichier est une série d'entrées de ce type:\\
 \begin{center}
 	\begin{tabular}{| l | l |}
@@ -289,15 +297,69 @@ L'architecture globale du programme est une architecture basée sur les événem
 
 Les implémentations concrètes de certaines classes sont disponibles en annexe.
 
-\subsubsection{Diagramme de classes}
+\subsubsection{Diagrammes de classes}
 
+Etant donné la taille du projet, il est compiqué de faire un diagramme contenant l'intégralité des classes. Afin d'obtenir un meilleur aperçu du programme il est nécessaire d'en séparer les parties.\\
+\afterpage{%
+\begin{landscape}
+\begin{figure}[!htbp]
+\centering
+\vspace*{-2cm}
+\hspace*{-4cm}
+\thispagestyle{empty}
+\includegraphics[scale=0.42]{routing.png}
+\caption{Diagramme du routage des messages}
+\end{figure}
+\end{landscape}
+}
+\newpage
 
+\begin{landscape}
+\begin{figure}[!htbp]
+\centering
+\vspace*{-2cm}
+\hspace*{-4cm}
+\thispagestyle{empty}
+\includegraphics[scale=0.40]{ds.png}
+\caption{Diagramme des structures de données}
+\end{figure}
+\end{landscape}
 
 \subsubsection{Arbre d'Huffman}
 
 L'arbre d'Huffman est construit selon la méthode habituelle en utilisant un tas (heap). Java ne présente pas directement de structure de tas mais la $PriorityQueue$ est en vérité triée grâce à un tas. Nous pouvons donc insérer dans la queue qui est triée selon le poids de l'opération, puis nous fusionnons les deux noeuds les plus hauts en un seul noeud (avec 2 enfants) jusqu'a ce qu'il ne reste qu'un seul noeud qui est donc la racine de l'arbre.
 
 \section{Utilisation}
+
+L'utilisation prévue du logiciel au début de projet était de générer un fichier ne contenant que les informations nécessaires. Malheureusement cette méthode n'est pas viable car les fichiers générés sont trop volumineux et en essayant de les réduire on finirait par créer un format complexe qui nécessiterait un interpréteur et on revient à la case départ.\\
+Une autre possibilité est de distruibuer le programme en tant que bibliothèque qui vient se greffer sur un programme et apporte les informations en même temps qu'elles sont analysées.\\
+C'est cette dernière option qui à été implémentée. En effet le programme présente un singleton $ReplayBuilder.getInstance()$ qui va contenir toutes les informations de l'analyse.\\
+Afin de rendre la tâche plus simple, il suffit de créer un classe implémentant l'interface ReplayListener:
+
+\inputminted[breaklines,breaksymbol=, frame=single,label=ReplayListener, stepnumber=1,tabsize=2]{java}{replaylistener.java}
+
+Et de l'enregister auprès de l'analyseur: \\
+\verb!ReplayBuilder.getInstance().registerListener(<Mon Listener>);!
+
+Ensuite, à la fin de chaque tick, la méthode update(tick, entities) du listener enregistré va être appelée afin de réagir au changement. Dans le paramètre $entities$ il y aura la totalité des entités présentes à cet instant.\\
+
+\subsection{Exemple}
+
+Afin de tester cette architecture et de vérifier si les données analysées sont correctes il a fallu créer un programme de visualisation. Le programme est très simple et basé sur un JFrame sur laquel nous dessinons au emplacements des joueurs / creeps / batiments.\\
+
+\newpage
+Voici le code qui s'occupe du rendu:
+\inputminted[fontsize=\footnotesize, breaklines,breaksymbol=, frame=single,label=Exemple, stepnumber=1,tabsize=2]{java}{example.java}
+\newpage
+Et voici le resultat: \\
+
+\begin{figure}[h]
+\begin{center}
+	\includegraphics[scale=0.48]{"visu.png"} 
+	\caption{Capture du programme de visualisation}
+\end{center}
+\end{figure}
+
 
 
 

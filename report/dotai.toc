@@ -2,12 +2,12 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {subsection}{\numberline {1.1}DotA 2}{3}{subsection.1.1}
 \contentsline {section}{\numberline {2}Recupération des informations d'OpenDota}{4}{section.2}
-\contentsline {subsection}{\numberline {2.1}Implémentation}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.1}Implémentation}{5}{subsection.2.1}
 \contentsline {section}{\numberline {3}Analyse des fichiers .dem}{5}{section.3}
 \contentsline {subsection}{\numberline {3.1}Format}{5}{subsection.3.1}
 \contentsline {subsubsection}{\numberline {3.1.1}En-tête}{5}{subsubsection.3.1.1}
-\contentsline {subsubsection}{\numberline {3.1.2}Corps}{5}{subsubsection.3.1.2}
-\contentsline {subsubsection}{\numberline {3.1.3}Données intégrées}{6}{subsubsection.3.1.3}
+\contentsline {subsubsection}{\numberline {3.1.2}Corps}{6}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}Données intégrées}{7}{subsubsection.3.1.3}
 \contentsline {subsection}{\numberline {3.2}Données}{9}{subsection.3.2}
 \contentsline {subsubsection}{\numberline {3.2.1}String Tables}{10}{subsubsection.3.2.1}
 \contentsline {subsubsection}{\numberline {3.2.2}Send Tables}{12}{subsubsection.3.2.2}
@@ -15,10 +15,11 @@
 \contentsline {subsubsection}{\numberline {3.2.4}Propriétés}{14}{subsubsection.3.2.4}
 \contentsline {subsubsection}{\numberline {3.2.5}PacketEntities}{14}{subsubsection.3.2.5}
 \contentsline {subsection}{\numberline {3.3}Implémentation}{15}{subsection.3.3}
-\contentsline {subsubsection}{\numberline {3.3.1}Diagramme de classes}{15}{subsubsection.3.3.1}
-\contentsline {subsubsection}{\numberline {3.3.2}Arbre d'Huffman}{15}{subsubsection.3.3.2}
-\contentsline {section}{\numberline {4}Utilisation}{16}{section.4}
-\contentsline {section}{\numberline {5}Conclusion}{16}{section.5}
-\contentsline {section}{\numberline {A}Implémentation du flux bit-par-bit}{17}{appendix.A}
-\contentsline {section}{\numberline {B}Implémentation des décodeurs}{22}{appendix.B}
-\contentsline {section}{\numberline {C}Implémentation des opérations pour l'arbre d'Huffman}{25}{appendix.C}
+\contentsline {subsubsection}{\numberline {3.3.1}Diagrammes de classes}{15}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Arbre d'Huffman}{18}{subsubsection.3.3.2}
+\contentsline {section}{\numberline {4}Utilisation}{18}{section.4}
+\contentsline {subsection}{\numberline {4.1}Exemple}{18}{subsection.4.1}
+\contentsline {section}{\numberline {5}Conclusion}{20}{section.5}
+\contentsline {section}{\numberline {A}Implémentation du flux bit-par-bit}{22}{appendix.A}
+\contentsline {section}{\numberline {B}Implémentation des décodeurs}{27}{appendix.B}
+\contentsline {section}{\numberline {C}Implémentation des opérations pour l'arbre d'Huffman}{30}{appendix.C}

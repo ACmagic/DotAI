@@ -20,13 +20,13 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 	private static final long serialVersionUID = 1L;
 	private DrawPane contentPane;
 	private Collection<Entity> entities;
-	private final int WIDTH = 720;
-	private final int HEIGHT = 720;
+	private final int WIN_WIDTH = 720;
+	private final int WIN_HEIGHT = 720;
 	private final int OFFSET = 40;
 
 	public ReplayRunner() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, WIDTH, HEIGHT);
+		setBounds(100, 100, WIN_WIDTH, WIN_HEIGHT);
 		contentPane = new DrawPane();
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
@@ -46,11 +46,11 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 	}
 
 	public int getMapX(Entity e) {
-		return (int) ((e.getWorldX() / 32768.0) * 720.0 * 2) - 360;
+		return (int) ((e.getWorldX() / 32768.0) * WIN_WIDTH * 2.0) - (WIN_WIDTH / 2);
 	}
 
 	public int getMapY(Entity e) {
-		return (int) ((e.getWorldY() / 32768.0) * 720.0 * 2) - 360;
+		return (int) ((e.getWorldY() / 32768.0) * WIN_HEIGHT * 2.0) - (WIN_HEIGHT / 2);
 	}
 
 	class DrawPane extends JPanel {
@@ -71,21 +71,20 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 			Graphics2D g = (Graphics2D)g1.create();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			g.drawImage(bg, OFFSET, OFFSET, 720 - OFFSET * 2, 720 - OFFSET * 2, null);
+			g.drawImage(bg, OFFSET, OFFSET, WIN_WIDTH - OFFSET * 2, WIN_HEIGHT - OFFSET * 2, null);
 			if (entities == null)
 				return;
 			for (Entity entity : entities) {
 				String name = entity.getClassName();
-				if(name.startsWith("CDOTA_Unit_Announcer")) continue;
 				if (entity.fetchProperty("CBodyComponentBaseAnimatingOverlay.m_cellX") != null) {
 					if(name.startsWith("CDOTA_Unit_Hero_")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
 						if((int)entity.fetchProperty("m_iHealth") > 0) {
         						g.fillArc(getMapX(entity) - 6, getMapY(entity) - 6, 12, 12, 0, 360);
         						g.setColor(color(name));
-        						g.fillArc(getMapX(entity) - 5, getMapY(entity)- 5, 10, 10, 0, 360);
+        						g.fillArc(getMapX(entity) - 5, getMapY(entity) - 5, 10, 10, 0, 360);
 						} else {
-							g.drawChars(new char[] {'X'}, 0, 1, getMapX(entity) - 5, getMapY(entity) - 5);
+							g.drawChars(new char[] {'X'}, 0, 1, getMapX(entity), getMapY(entity));
 						}
 					} else if(name.equals("CDOTA_BaseNPC_Creep_Lane") || name.equals("CDOTA_BaseNPC_Creep_Siege")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
@@ -99,6 +98,9 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 					} else if(name.equals("CDOTA_BaseNPC_Fort")) {
 						g.setColor((long)entity.fetchProperty("m_iTeamNum") == 3 ? Color.RED : Color.green);
 						g.fillPolygon(new int[] {getMapX(entity) - 8, getMapX(entity), getMapX(entity) + 8}, new int[] {getMapY(entity) + 8, getMapY(entity) - 8, getMapY(entity) + 8}, 3);					
+					} else if(name.equals("CDOTA_Unit_Roshan")){
+						g.setColor(Color.ORANGE);
+						g.fillArc(getMapX(entity) - 5, getMapY(entity) - 5, 10, 10, 0, 360);
 					}
 				}
 			}
@@ -108,5 +110,4 @@ public class ReplayRunner extends JFrame implements ReplayListener {
 			return new Color(name.length() * 10 % 255, Math.abs(name.hashCode()) % 255, name.charAt(name.length()-1) * 20 % 255);
 		}
 	}
-
 }
