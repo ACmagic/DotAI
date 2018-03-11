@@ -368,6 +368,16 @@ Et voici le resultat: \\
 Ce travail s'est révelé bien plus compliqué que prévu, mais extrêmement intéressant. Je ne me serais jamais douté qu'un format puisse être aussi complexe mais c'est cette complexité qui permet d'atteindre un très haut taux de compression. En effet j'ai essayé d'exporter les données de position de chaque entité de manière naïve en écrivant chaque position à chaque tick et j'ai obtenu des fichiers de plusieurs GB. L'analyse de ce format a donc été un énorme apprentissage pour moi, avec notemment la découverte de protobuf et une révision des théories de compression vues en 1ère année.\\
 Au final nous obtenons deux programmes qui fonctionnent comme prévu et peuvent constituer un premier pas vers la réalisation d'une IA capable d'apprendre à jouer à DotA2 comme un humain. Bien que la possibilité de créer cette IA dans le cadre d'un travail de bachelor existe, je ne compte pas le faire car même si très interessante sur le papier, la base théorique qui permettrait de réaliser ce projet n'est pas enseignée à l'hepia.
 
+\section{Références}
+
+Etant donné que les développeurs de DotA 2 ne donnent absolument aucune documentation sur le format j'ai compris comment l'interprêter en croisant les sources des codes d'autres programmes qui font la même analyse.\\
+\bigskip
+\begin{itemize}
+	\item Clarity, un parser très complet codé en Java: \url{https://github.com/skadistats/clarity}
+	\item Manta, un parser codé en Go: \url{https://github.com/dotabuff/manta}
+	\item Rapier, un parser codé en JavaScript: \url{https://github.com/odota/rapier}
+\end{itemize}
+
 \newpage
 \appendix
 \section{Implémentation du flux bit-par-bit}

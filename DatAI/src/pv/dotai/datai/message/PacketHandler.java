@@ -1,7 +1,6 @@
 package pv.dotai.datai.message;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -15,6 +14,11 @@ import pv.dotai.datai.protobuf.Netmessages.SVC_Messages;
 import pv.dotai.datai.protobuf.Networkbasetypes.NET_Messages;
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Handler for CDemoPacket messages (DEM_Packet)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class PacketHandler implements MessageHandler<CDemoPacket> {
 
 	private MessageRouter router;
@@ -34,20 +38,6 @@ public class PacketHandler implements MessageHandler<CDemoPacket> {
 			bs.get(data);
 			pendings.add(new PendingMessage(cmd, data));
 		}
-		
-		pendings.sort(new Comparator<PendingMessage>() {
-			@Override
-			public int compare(PendingMessage a, PendingMessage b) {
-				int p = 0;
-				if(SVC_Messages.forNumber(a.getType()) == SVC_Messages.svc_CreateStringTable || SVC_Messages.forNumber(a.getType()) == SVC_Messages.svc_UpdateStringTable) {
-					p--;
-				}
-				if(SVC_Messages.forNumber(b.getType()) == SVC_Messages.svc_CreateStringTable || SVC_Messages.forNumber(b.getType()) == SVC_Messages.svc_UpdateStringTable) {
-					p++;
-				}
-				return p;
-			}
-		});
 		
 		for (PendingMessage pendingMessage : pendings) {
 			if (SVC_Messages.forNumber(pendingMessage.getType()) != null) {

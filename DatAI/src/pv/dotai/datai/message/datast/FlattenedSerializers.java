@@ -8,6 +8,11 @@ import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializerField_t;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializer_t;
 
+/**
+ * This class contains all tools to decode a flattened serializer
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class FlattenedSerializers {
 	private Map<String, Map<Integer, DataTable>> serializers;
 	private CSVCMsg_FlattenedSerializer proto;
@@ -21,6 +26,11 @@ public class FlattenedSerializers {
 		this.build = build;
 	}
 
+	/**
+	 * Interates through the serializers and fills a table with each fields right serializers and properties
+	 * @param s Flattened Serializer to decode
+	 * @return DataTable ready to use
+	 */
 	public DataTable recurseTable(ProtoFlattenedSerializer_t s) {
 		DataTable table = new DataTable(this.proto.getSymbols(s.getSerializerNameSym()), s.getSerializerVersion());
 		List<ProtoFlattenedSerializerField_t> props = this.proto.getFieldsList();

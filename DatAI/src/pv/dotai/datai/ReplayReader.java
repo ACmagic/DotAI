@@ -40,6 +40,11 @@ import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_PacketEntities;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_ServerInfo;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
 
+/**
+ * This class will read a replay file (.dem) and send each messages to a router
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class ReplayReader {
 
 	public FileInputStream file;
@@ -62,6 +67,11 @@ public class ReplayReader {
 		this.router.registerHandler(CSVCMsg_UpdateStringTable.class, new UpdateStringTableHandler());
 	}
 	
+	/**
+	 * Start parsing a demo file
+	 * @param path path to the file
+	 * @throws ReplayException if the file is unreadable / unparsable
+	 */
 	public void readFile(String path) throws ReplayException {
 		try {
 			this.file = new FileInputStream(path);
@@ -156,6 +166,12 @@ public class ReplayReader {
 	
 	}	
 	
+	/**
+	 * Reads a varint from a classic java stream	
+	 * @param is input stream
+	 * @return the varint's value
+	 * @throws IOException if the streams encounters an error
+	 */
 	public int getVarInt(InputStream is) throws IOException {
 		int result = 0;
 		int position = 0;

@@ -1,7 +1,14 @@
+/**
+ * Slightly modified from https://github.com/skadistats/clarity/blob/f8e1fec8c5478b9ddca4aa6866c14fb18526b638/src/main/java/skadistats/clarity/decoder/unpacker/FloatQuantizedUnpacker.java
+ */
 package pv.dotai.datai.message.datast.decoder;
 
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Decoder for network quantized floats
+ * @since  1.0
+ */
 public class FloatQuantizedDecoder {
 
 	private static final int QFE_ROUNDDOWN = 0x1;
@@ -10,7 +17,6 @@ public class FloatQuantizedDecoder {
     private static final int QFE_ENCODE_INTEGERS_EXACTLY = 0x8;
 	public static final long[] MASKS = { 0x0L, 0x1L, 0x3L, 0x7L, 0xfL, 0x1fL, 0x3fL, 0x7fL, 0xffL, 0x1ffL, 0x3ffL, 0x7ffL, 0xfffL, 0x1fffL, 0x3fffL, 0x7fffL, 0xffffL, 0x1ffffL, 0x3ffffL, 0x7ffffL, 0xfffffL, 0x1fffffL, 0x3fffffL, 0x7fffffL, 0xffffffL, 0x1ffffffL, 0x3ffffffL, 0x7ffffffL, 0xfffffffL, 0x1fffffffL, 0x3fffffffL, 0x7fffffffL, 0xffffffffL, 0x1ffffffffL, 0x3ffffffffL, 0x7ffffffffL, 0xfffffffffL, 0x1fffffffffL, 0x3fffffffffL, 0x7fffffffffL, 0xffffffffffL, 0x1ffffffffffL, 0x3ffffffffffL, 0x7ffffffffffL, 0xfffffffffffL, 0x1fffffffffffL, 0x3fffffffffffL, 0x7fffffffffffL, 0xffffffffffffL, 0x1ffffffffffffL, 0x3ffffffffffffL, 0x7ffffffffffffL, 0xfffffffffffffL, 0x1fffffffffffffL, 0x3fffffffffffffL, 0x7fffffffffffffL, 0xffffffffffffffL, 0x1ffffffffffffffL, 0x3ffffffffffffffL, 0x7ffffffffffffffL, 0xfffffffffffffffL, 0x1fffffffffffffffL, 0x3fffffffffffffffL, 0x7fffffffffffffffL, 0xffffffffffffffffL};
 
-    private String fieldName;
     private int bitCount;
     private float minValue;
     private float maxValue;
@@ -21,7 +27,6 @@ public class FloatQuantizedDecoder {
     private float decodeMultiplier;
 
     public FloatQuantizedDecoder(String fieldName, int bitCount, int flags, float minValue, float maxValue) {
-        this.fieldName = fieldName;
         this.bitCount = bitCount;
         this.minValue = minValue;
         this.maxValue = maxValue;

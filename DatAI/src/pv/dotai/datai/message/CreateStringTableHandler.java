@@ -7,10 +7,16 @@ import java.util.List;
 import org.xerial.snappy.Snappy;
 
 import pv.dotai.datai.ReplayBuilder;
+import pv.dotai.datai.ReplayException;
 import pv.dotai.datai.message.datast.StringTable;
 import pv.dotai.datai.message.datast.StringTableItem;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_CreateStringTable;
 
+/**
+ * Handler for CSVCMsg_CreateStringTable messages (svc_CreateStringTable)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class CreateStringTableHandler implements MessageHandler<CSVCMsg_CreateStringTable> {
 
 	@Override
@@ -23,8 +29,7 @@ public class CreateStringTableHandler implements MessageHandler<CSVCMsg_CreateSt
 			b.get(compression);
 			b.position(0);
 			if(new String(compression).equals("LZSS")) {
-				//TODO support LZSS compression for old replay
-				throw new RuntimeException("LZSS compression not supported");
+				throw new ReplayException("LZSS compression not supported");
 			} else {
 				try {
 					byte[] backarray = new byte[b.capacity()];

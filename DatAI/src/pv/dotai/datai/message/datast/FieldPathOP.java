@@ -1,7 +1,14 @@
+/**
+ * File modified from https://github.com/skadistats/clarity/blob/b1bb55308db3ace114e8658c15c39ef9dcec800c/src/main/java/skadistats/clarity/decoder/s2/FieldOpType.java
+ */
 package pv.dotai.datai.message.datast;
 
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Enum of all field path operations to put in the tree, along with their's weights
+ * @since  1.0
+ */
 public enum FieldPathOP {
 
 	PlusOne(36271) {

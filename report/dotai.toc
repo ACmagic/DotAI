@@ -20,6 +20,7 @@
 \contentsline {section}{\numberline {4}Utilisation}{18}{section.4}
 \contentsline {subsection}{\numberline {4.1}Exemple}{18}{subsection.4.1}
 \contentsline {section}{\numberline {5}Conclusion}{20}{section.5}
+\contentsline {section}{\numberline {6}Références}{21}{section.6}
 \contentsline {section}{\numberline {A}Implémentation du flux bit-par-bit}{22}{appendix.A}
 \contentsline {section}{\numberline {B}Implémentation des décodeurs}{27}{appendix.B}
 \contentsline {section}{\numberline {C}Implémentation des opérations pour l'arbre d'Huffman}{30}{appendix.C}

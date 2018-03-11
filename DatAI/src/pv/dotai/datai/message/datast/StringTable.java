@@ -9,6 +9,11 @@ import java.util.Map;
 
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Internal representation of a string table
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class StringTable {
 	
 	public static final int KEY_HISTORY_SIZE = 32;
@@ -27,6 +32,14 @@ public class StringTable {
 		this.items = new HashMap<>();
 	}
 	
+	/**
+	 * Reads a string table
+	 * @param rodata The message's data
+	 * @param nUpdates Number of items to update
+	 * @param userDataFixedSize Is the data size fixed ?
+	 * @param userDataSize The data size (if fixed)
+	 * @return A list of items that are in the table
+	 */
 	public static List<StringTableItem> parseStringTable(ByteBuffer rodata, int nUpdates, boolean userDataFixedSize, int userDataSize) {
 		List<StringTableItem> items = new LinkedList<>();
 		int idx = -1;

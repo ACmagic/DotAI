@@ -5,6 +5,11 @@ import java.util.PriorityQueue;
 
 import pv.dotai.datai.message.datast.FieldPathOP;
 
+/**
+ * Utility class for Huffman tree building
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class HuffmanUtil {
 
 	private HuffmanUtil() {}

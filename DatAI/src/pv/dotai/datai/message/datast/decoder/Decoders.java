@@ -4,6 +4,11 @@ import pv.dotai.datai.ReplayException;
 import pv.dotai.datai.message.datast.DataTableField;
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * All of the decoders functions
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class Decoders {
 
 	public static double decodeSimTime(BitStream bs, DataTableField dtf) {

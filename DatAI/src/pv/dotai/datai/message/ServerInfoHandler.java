@@ -6,6 +6,11 @@ import java.util.regex.Pattern;
 import pv.dotai.datai.ReplayBuilder;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_ServerInfo;
 
+/**
+ * Handler for CSVCMsg_ServerInfo messages (svc_ServerInfo)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class ServerInfoHandler implements MessageHandler<CSVCMsg_ServerInfo> {
 
 	@Override

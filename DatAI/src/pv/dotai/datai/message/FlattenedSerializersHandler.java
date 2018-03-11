@@ -8,6 +8,11 @@ import pv.dotai.datai.message.datast.PropertySerializerTable;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.dotai.datai.protobuf.Netmessages.ProtoFlattenedSerializer_t;
 
+/**
+ * Handler for CSVCMsg_FlattenedSerializer messages (svc_FlattenedSerializer)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class FlattenedSerializersHandler implements MessageHandler<CSVCMsg_FlattenedSerializer>{
 
 	@Override

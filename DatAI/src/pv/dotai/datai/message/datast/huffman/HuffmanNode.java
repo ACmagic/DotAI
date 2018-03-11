@@ -1,5 +1,10 @@
 package pv.dotai.datai.message.datast.huffman;
 
+/**
+ * A node (has children) from a huffman tree
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class HuffmanNode implements HuffmanTree {
 
 	private int weight;

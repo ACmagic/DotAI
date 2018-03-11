@@ -6,6 +6,11 @@ import pv.dotai.datai.protobuf.Demo.CDemoSendTables;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_FlattenedSerializer;
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Handler for CDemoSendTables messages (DEM_SendTables)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class SendTableHandler implements MessageHandler<CDemoSendTables>{
 
 	private MessageRouter router;

@@ -3,6 +3,11 @@ package pv.dotai.datai.replay;
 import pv.dotai.datai.message.datast.DataTable;
 import pv.dotai.datai.message.datast.Property;
 
+/**
+ * Internal representation for an entity
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class Entity {
 
 	private int index;

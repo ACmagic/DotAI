@@ -7,6 +7,11 @@ import pv.dotai.datai.message.datast.huffman.HuffmanTree;
 import pv.dotai.datai.message.datast.huffman.HuffmanUtil;
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Field path to walk through in order to get which field to decode when decoding properties
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class FieldPath {
 
 	private DataTable parent;

@@ -1,5 +1,10 @@
 package pv.dotai.datai.message.datast;
 
+/**
+ * Internal representation of a field's properties in a flattened serializer's structure
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class DataTableField {
 	private String name;
 	private String encoder;

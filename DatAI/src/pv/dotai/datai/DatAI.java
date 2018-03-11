@@ -2,6 +2,11 @@ package pv.dotai.datai;
 
 import pv.dotai.datai.example.ReplayRunner;
 
+/**
+ * Main class for the analyzer's example
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class DatAI {
 	
 	public static void main(String[] args) {	

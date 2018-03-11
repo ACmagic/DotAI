@@ -14,6 +14,13 @@ import pv.dotai.datai.message.datast.StringTables;
 import pv.dotai.datai.replay.Entity;
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * This class is the master of all the parsing
+ * It holds the data gathered by each listener
+ * Also it registers all listeners
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class ReplayBuilder {
 	
 	public int CLASSID_SIZE;
@@ -43,16 +50,19 @@ public class ReplayBuilder {
 		listeners.add(listener);
 	}
 	
+	/**
+	 * Notifies all the listener that a change has been made in the state of the game
+	 * @param tick current tick
+	 */
 	public void snapshot(int tick) {
 		for (ReplayListener replayListener : listeners) {
 			replayListener.update(tick, new ArrayList<>(entities.values()));
 		}
 	}
 	
-	public void finish() {
-		
-	}
-	
+	/**
+	 * Updates each entity that has a baseline
+	 */
 	public void updateInstanceBaseline() {
 		if(!classInfoComplete) return;
 		StringTable st = this.getStringTables().getByName("instancebaseline");

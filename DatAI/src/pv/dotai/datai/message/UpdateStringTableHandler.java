@@ -7,6 +7,11 @@ import pv.dotai.datai.message.datast.StringTable;
 import pv.dotai.datai.message.datast.StringTableItem;
 import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_UpdateStringTable;
 
+/**
+ * Handler for CSVCMsg_UpdateStringTable messages (svc_UpdateStringTable)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class UpdateStringTableHandler implements MessageHandler<CSVCMsg_UpdateStringTable> {
 
 	@Override

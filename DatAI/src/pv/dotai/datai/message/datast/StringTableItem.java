@@ -1,5 +1,10 @@
 package pv.dotai.datai.message.datast;
 
+/**
+ * Internal representation of a String table's item
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class StringTableItem {
 	private int index;
 	private String key;

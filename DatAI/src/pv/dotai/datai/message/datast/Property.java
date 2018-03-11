@@ -5,6 +5,11 @@ import java.util.Map;
 
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Container for properties that we read
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class Property {
 
 	private final Map<String, Object> KV;
@@ -13,6 +18,11 @@ public class Property {
 		KV = new HashMap<>();
 	}
 
+	/**
+	 * Reads each properties on a stream, using the related serializer
+	 * @param bs The bit stream to read infos from
+	 * @param ser The DataTable of the type we are decoding
+	 */
 	public void readProperties(BitStream bs, DataTable ser) {
 		FieldPath fp = new FieldPath(ser);
 		fp.walk(bs);

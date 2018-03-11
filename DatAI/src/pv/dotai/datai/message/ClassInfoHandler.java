@@ -3,6 +3,11 @@ package pv.dotai.datai.message;
 import pv.dotai.datai.ReplayBuilder;
 import pv.dotai.datai.protobuf.Demo.CDemoClassInfo;
 
+/**
+ * Handler for CDemoClassInfo messages (DEM_ClassInfo)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class ClassInfoHandler implements MessageHandler<CDemoClassInfo> {
 
 	@Override

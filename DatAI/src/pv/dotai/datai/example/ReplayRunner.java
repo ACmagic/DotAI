@@ -16,6 +16,11 @@ import javax.swing.JPanel;
 import pv.dotai.datai.ReplayListener;
 import pv.dotai.datai.replay.Entity;
 
+/**
+ * Swing frame for the analyzer's example
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class ReplayRunner extends JFrame implements ReplayListener {
 	private static final long serialVersionUID = 1L;
 	private DrawPane contentPane;

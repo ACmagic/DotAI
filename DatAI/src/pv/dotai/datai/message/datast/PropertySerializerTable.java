@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 import pv.dotai.datai.message.datast.decoder.DecodeFunc;
 import pv.dotai.datai.message.datast.decoder.Decoders;
 
+/**
+ * Utility class to get the right serializer for each type of data
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class PropertySerializerTable {
 
 	private Map<String, PropertySerializer> propertySerializers;
@@ -18,6 +23,10 @@ public class PropertySerializerTable {
 		this.propertySerializers = new HashMap<>();
 	}
 
+	/**
+	 * Sets the right serializer for a field
+	 * @param dtf the field to define the serializer for
+	 */
 	public void FillSerializer(DataTableField dtf) {
 		switch (dtf.getName()) {
 			case "m_flSimulationTime":
@@ -105,8 +114,6 @@ public class PropertySerializerTable {
 					} else {
 						System.err.println("Unable to read vector type for " + name);
 					}
-				} else {
-					//System.err.println("No decoder for type " + name);
 				}
 				break;
 		}

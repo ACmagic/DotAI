@@ -2,6 +2,11 @@ package pv.dotai.datai.message.datast;
 
 import pv.dotai.datai.message.datast.decoder.DecodeFunc;
 
+/**
+ * Actual serializer for a certain type of data
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class PropertySerializer {
 	private DecodeFunc decode;
 	private DecodeFunc decodeContainer;

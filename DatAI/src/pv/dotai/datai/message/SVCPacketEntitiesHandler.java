@@ -8,6 +8,11 @@ import pv.dotai.datai.protobuf.Netmessages.CSVCMsg_PacketEntities;
 import pv.dotai.datai.replay.Entity;
 import pv.dotai.datai.util.BitStream;
 
+/**
+ * Handler for CSVCMsg_PacketEntities messages (svc_PacketEntities)
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class SVCPacketEntitiesHandler implements MessageHandler<CSVCMsg_PacketEntities> {	
 	
 	private boolean full = false;

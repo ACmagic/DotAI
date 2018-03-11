@@ -3,6 +3,11 @@ package pv.dotai.datai.util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * Bit-per-bit stream
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class BitStream {
 
 	private int position;

@@ -1,5 +1,10 @@
 package pv.dotai.datai.message.datast.huffman;
 
+/**
+ * A leaf from a huffman tree
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class HuffmanLeaf implements HuffmanTree {
 
 	private int weight;

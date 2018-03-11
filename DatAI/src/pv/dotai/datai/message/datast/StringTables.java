@@ -3,6 +3,11 @@ package pv.dotai.datai.message.datast;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Holder for all of the String tables with accessors
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class StringTables {
 	
 	private final Map<Integer, StringTable> tables;

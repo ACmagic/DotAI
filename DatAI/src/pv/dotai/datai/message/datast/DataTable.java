@@ -3,6 +3,11 @@ package pv.dotai.datai.message.datast;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Internal representation of the data contained in a flattened serializer
+ * @author Thomas Ibanez
+ * @since  1.0
+ */
 public class DataTable {
 	private String name;
 	private int flags;
