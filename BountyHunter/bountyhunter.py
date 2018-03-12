@@ -37,5 +37,6 @@ for m in matches:
                     for chunk in response.iter_content(chunk_size=1024):
                         if chunk: # filter out keep-alive new chunks
                             out_file.write(chunk)
+                    out_file.close()
                     print("Decompressing...")
                     os.system("bzip2 -d "+filepath)
