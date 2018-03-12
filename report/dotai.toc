@@ -23,4 +23,3 @@
 \contentsline {section}{\numberline {6}Références}{21}{section.6}
 \contentsline {section}{\numberline {A}Implémentation du flux bit-par-bit}{22}{appendix.A}
 \contentsline {section}{\numberline {B}Implémentation des décodeurs}{27}{appendix.B}
-\contentsline {section}{\numberline {C}Implémentation des opérations pour l'arbre d'Huffman}{30}{appendix.C}

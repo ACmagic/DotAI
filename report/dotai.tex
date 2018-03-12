@@ -5,7 +5,7 @@
 \addtolength{\textwidth}{4cm}
 \usepackage[frenchb]{babel}
 \usepackage[T1]{fontenc}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{afterpage}
 \usepackage{minted}
@@ -18,6 +18,20 @@
 
 \begin{document}
 \maketitle
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+\begin{center}
+\includegraphics[scale=1]{logo.png}
+\end{center}
 
 \newpage
 \tableofcontents
@@ -30,7 +44,7 @@ Le but de ce projet de semestre est de créer un ensemble de logiciels permettan
 
 \subsection{DotA 2}
 
-DotA 2 est un jeu-vidéo multijoueur de type bataille en arène (MOBA) dans lequel 2 équipes s'affrontent. Chaque équipe est composée de 5 joueurs, chacun controllant un héros choisi parmis les héros disponibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). A l'heure actuelle, le jeu propose 115 héros chacun disposant de 5 attaques différentes. La partie se déroule sur une carte symétrique constituée de 3 "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
+DotA 2 est un jeu-vidéo multijoueur de type bataille en arène (MOBA) dans lequel deux équipes s'affrontent. Chaque équipe est composée de cinq joueurs, chacun controllant un héros choisi parmis les héros disponibles dans le jeu (il ne s'agit donc pas d'un avatar personnalisable comme dans le cas des MMORPG). A l'heure actuelle, le jeu propose 115 héros chacun disposant de cinq attaques différentes. La partie se déroule sur une carte symétrique constituée de trois "lanes" sur lesquelles sont disposées des tours dont voici une vue aérienne: \\
 
 \begin{figure}[h]
 \begin{center}
@@ -360,9 +374,6 @@ Et voici le resultat: \\
 \end{center}
 \end{figure}
 
-
-
-
 \section{Conclusion}
 
 Ce travail s'est révelé bien plus compliqué que prévu, mais extrêmement intéressant. Je ne me serais jamais douté qu'un format puisse être aussi complexe mais c'est cette complexité qui permet d'atteindre un très haut taux de compression. En effet j'ai essayé d'exporter les données de position de chaque entité de manière naïve en écrivant chaque position à chaque tick et j'ai obtenu des fichiers de plusieurs GB. L'analyse de ce format a donc été un énorme apprentissage pour moi, avec notemment la découverte de protobuf et une révision des théories de compression vues en 1ère année.\\
@@ -385,8 +396,4 @@ Etant donné que les développeurs de DotA 2 ne donnent absolument aucune docume
 \newpage
 \section{Implémentation des décodeurs}
 \inputminted[breaklines,breaksymbol=, frame=single,label=Decoders, stepnumber=1,tabsize=2]{java}{Decoders.java}
-\newpage
-\section{Implémentation des opérations pour l'arbre d'Huffman}
-\inputminted[breaklines,breaksymbol=, frame=single,label=FieldPathOP, stepnumber=1,tabsize=2]{java}{FieldPathOP.java}
-
 \end{document}
